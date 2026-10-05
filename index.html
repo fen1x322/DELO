@@ -555,6 +555,7 @@ body.fo-on nav.tabs,body.fo-on #aiFab{display:none!important}
         <label class="f">Náročnosť<select id="s3Dif"><option value="0.5">Ľahká</option><option value="1" selected>Normálna</option><option value="1.8">Ťažká</option></select></label>
         <label class="f">Zastrieľané do (m)<input type="number" id="s3Tol" value="50"></label>
         <label class="f">Zastrieľava zbraň č.<select id="s3Gun"></select></label>
+        <label class="f">Pozorovateľ<select id="s3Ob"><option value="gun" selected>Na čiare streľby (oprava = opak hlásenia)</option><option value="pz">Na pozorovateľni PZ – bokom (K, uhol posunu)</option></select></label>
       </div></details>
   </div>
 </section>
@@ -1417,7 +1418,8 @@ function load3D(cb){if(window.THREE&&THREE.OrbitControls)return cb();if(T3.faile
   add('https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js',()=>add('https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js',()=>{T3.loading=false;msg3('');T3.cbs.splice(0).forEach(f=>f());}));}
 function msg3(t){const m=$('#msg3');m.textContent=t;m.style.display=t?'flex':'none';}
 function enter3D(){T3.visible=true;load3D(()=>{if(!T3.ready)init3D();requestAnimationFrame(()=>{resize3D();const sg=sig3();if(sg!==T3.sig){if(!LAST||LAST.m.sys!==BAT.sys)calcMission();if(!LAST){msg3('Najprv zadaj cieľ v karte Úloha.');return;}msg3('');buildWorld3();newTask3();cam3(T3.cam);}else cam3(T3.cam);});});}
-function sig3(){const T=TGT();return JSON.stringify([$('#uTT').value,BAT.SB,BAT.guns,BAT.sys,BAT.ZS,OBS,T,$('#s3Ex').value,LAST&&LAST.m.type,LAST&&LAST.m.F,LAST&&LAST.m.Dp,LAST&&LAST.m.sheaf]);}
+function obs3(){if($('#s3Ob').value!=='gun')return OBS;const i=typeof SIM3!=='undefined'&&SIM3.adjI!=null&&BAT.guns[SIM3.adjI]?SIM3.adjI:-1;const P=i>=0?gunPos(i):BAT.SB;return{X:P.X,Y:P.Y,H:P.H};}
+function sig3(){const T=TGT();return JSON.stringify([$('#uTT').value,BAT.SB,BAT.guns,BAT.sys,BAT.ZS,OBS,T,$('#s3Ex').value,$('#s3Ob').value,LAST&&LAST.m.type,LAST&&LAST.m.F,LAST&&LAST.m.Dp,LAST&&LAST.m.sheaf]);}
 function init3D(){const st=$('#stage3');R3=new THREE.WebGLRenderer({antialias:true});R3.setPixelRatio(Math.min(2,window.devicePixelRatio));st.prepend(R3.domElement);
   SC3=new THREE.Scene();CAM3=new THREE.PerspectiveCamera(50,1,.5,80000);CTL3=new THREE.OrbitControls(CAM3,R3.domElement);CTL3.enableDamping=true;CTL3.maxPolarAngle=Math.PI*.495;
   CTL3.addEventListener('start',()=>{if(T3.cam!=='over'&&T3.cam!=='free'){T3.cam='free';$$('#cams3 button').forEach(b=>b.classList.remove('on'));reticle();}});
@@ -1473,8 +1475,8 @@ function killEnemies(imps){const t=ttOf(LAST.m.tt);const R=(LETH[LAST.s.grp]||18
 function aimModel(i,azr,th){const m=GUNS3[i];if(!m)return;m.sc.rotation.y=-azr;m.pivot.rotation.x=th;}
 function drape(a,b,color,dashed,lift=6){const pts=[];const n=Math.max(8,Math.ceil(dist(a,b)/120));for(let k=0;k<=n;k++){const X=a.X+(b.X-a.X)*k/n,Y=a.Y+(b.Y-a.Y)*k/n;pts.push(w2s(X,Y,hAt(X,Y)+lift/T3.exag));}
   const g=new THREE.BufferGeometry().setFromPoints(pts);const l=new THREE.Line(g,dashed?new THREE.LineDashedMaterial({color,dashSize:8,gapSize:6,transparent:true,opacity:.85}):new THREE.LineBasicMaterial({color}));if(dashed)l.computeLineDistances();return l;}
-function buildWorld3(){T3.exag=+$('#s3Ex').value;const T=LAST.m.T,SB=BAT.SB;const P=[SB,OBS,T];
-  T3.origin={X:(Math.min(...P.map(p=>p.X))+Math.max(...P.map(p=>p.X)))/2,Y:(Math.min(...P.map(p=>p.Y))+Math.max(...P.map(p=>p.Y)))/2,H:(SB.H+OBS.H+T.H)/3};
+function buildWorld3(){const OB3=obs3();T3.exag=+$('#s3Ex').value;const T=LAST.m.T,SB=BAT.SB;const P=[SB,OB3,T];
+  T3.origin={X:(Math.min(...P.map(p=>p.X))+Math.max(...P.map(p=>p.X)))/2,Y:(Math.min(...P.map(p=>p.Y))+Math.max(...P.map(p=>p.Y)))/2,H:(SB.H+OB3.H+T.H)/3};
   const span=Math.max(...P.map(p=>Math.abs(p.X-T3.origin.X)),...P.map(p=>Math.abs(p.Y-T3.origin.Y)))+3000;buildRBF3(P);
   const bg=col3('--panel2');SC3.background=bg;SC3.fog=new THREE.Fog(bg,span/10*1.3,span/10*4);
   [TER3,MRK3,IMP3,FX3].forEach(clear3);SHELLS=[];GUNS3=[];
@@ -1487,15 +1489,15 @@ function buildWorld3(){T3.exag=+$('#s3Ex').value;const T=LAST.m.T,SB=BAT.SB;cons
   for(let X=Math.ceil(x0/1000)*1000;X<=x1;X+=1000)seg(X,y0,X,y1);for(let Y=Math.ceil(y0/1000)*1000;Y<=y1;Y+=1000)seg(x0,Y,x1,Y);
   const gg=new THREE.BufferGeometry();gg.setAttribute('position',new THREE.Float32BufferAttribute(gp,3));TER3.add(new THREE.LineSegments(gg,new THREE.LineBasicMaterial({color:col3('--acc'),transparent:true,opacity:.2})));
   const cAcc=col3('--acc'),cFr=col3('--fr'),cHo=col3('--ho');
-  MRK3.add(drape(SB,T,cAcc,true));MRK3.add(drape(OBS,T,cFr,true));
+  MRK3.add(drape(SB,T,cAcc,true));MRK3.add(drape(OB3,T,cFr,true));
   const fu={X:Math.cos(LAST.Af),Y:Math.sin(LAST.Af)},du={X:-fu.Y,Y:fu.X};const F=Math.max(LAST.m.F,20),Dp=Math.max(LAST.m.Dp,20);
   const cr=[[-1,-1],[1,-1],[1,1],[-1,1],[-1,-1]].map(([i,j])=>({X:T.X+fu.X*i*F/2+du.X*j*Dp/2,Y:T.Y+fu.Y*i*F/2+du.Y*j*Dp/2}));for(let k=0;k<4;k++)MRK3.add(drape(cr[k],cr[k+1],cHo,false,3));
   buildEnemy3();const tp=w2s(T.X,T.Y,hAt(T.X,T.Y));const tg=pole3(cHo,26);tg.position.copy(tp);MRK3.add(tg);MRK3.add(label3('Cieľ '+LAST.m.id,tp.clone().add(new THREE.Vector3(0,32,0)),'#e5484d'));
-  const op=w2s(OBS.X,OBS.Y,hAt(OBS.X,OBS.Y));const og=pole3(cFr,26);og.position.copy(op);MRK3.add(og);MRK3.add(label3('PZ',op.clone().add(new THREE.Vector3(0,32,0)),'#5aa9e6'));
+  const op=w2s(OB3.X,OB3.Y,hAt(OB3.X,OB3.Y));const og=pole3(cFr,26);og.position.copy(op);MRK3.add(og);MRK3.add(label3('PZ',op.clone().add(new THREE.Vector3(0,32,0)),'#5aa9e6'));
   BAT.guns.forEach((g,i)=>{if(!g.on){GUNS3[i]=null;return;}const P=gunPos(i);const m=gunModel(BAT.sys);m.g.position.copy(w2s(P.X,P.Y,hAt(P.X,P.Y)));MRK3.add(m.g);GUNS3[i]=m;const r=LAST.rows.find(x=>x.i===i);aimModel(i,r&&r.azF!=null?r.azF:BAT.ZS,r&&r.th?r.th:.1);});
   const sp=w2s(SB.X,SB.Y,hAt(SB.X,SB.Y));const bp=pole3(cAcc,18);bp.position.y+=4;bp.position.copy(sp);MRK3.add(bp);MRK3.add(label3('Batéria',sp.clone().add(new THREE.Vector3(0,32,0)),'#f2a23a'));
   T3.sig=sig3();}
-function cam3(m){T3.cam=m;$$('#cams3 button').forEach(b=>b.classList.toggle('on',b.dataset.c===m));if(!LAST||!T3.ready)return;const T=w2s(LAST.m.T.X,LAST.m.T.Y,LAST.m.T.H),G=w2s(BAT.SB.X,BAT.SB.Y,BAT.SB.H),O=w2s(OBS.X,OBS.Y,OBS.H+2);
+function cam3(m){const OB3=obs3();T3.cam=m;$$('#cams3 button').forEach(b=>b.classList.toggle('on',b.dataset.c===m));if(!LAST||!T3.ready)return;const T=w2s(LAST.m.T.X,LAST.m.T.Y,LAST.m.T.H),G=w2s(BAT.SB.X,BAT.SB.Y,BAT.SB.H),O=w2s(OB3.X,OB3.Y,OB3.H+2);
   CTL3.enabled=m!=='shell'&&m!=='obs';CAM3.fov=50;[MRK3,IMP3].forEach(g=>g.children.forEach(o=>{if(o.isSprite)o.visible=m!=='obs';}));
   if(m==='over'){const d=G.distanceTo(T),dir=T.clone().sub(G).setY(0).normalize(),side=new THREE.Vector3(-dir.z,0,dir.x),k=Math.max(1,.9/CAM3.aspect);const c=G.clone().lerp(T,.55);CAM3.position.copy(c).add(dir.clone().multiplyScalar(-d*.95*k)).add(side.multiplyScalar(d*.28*k)).add(new THREE.Vector3(0,d*.6*k,0));CTL3.target.copy(c);}
   else if(m==='bat'){const dir=T.clone().sub(G).setY(0).normalize();CAM3.position.copy(G).add(dir.clone().multiplyScalar(-26)).add(new THREE.Vector3(0,9,0)).add(new THREE.Vector3(-dir.z,0,dir.x).multiplyScalar(16));CTL3.target.copy(G).add(dir.multiplyScalar(10));}
@@ -1551,9 +1553,9 @@ function disp3(D){return{r:gauss()*Math.max(10,.004*D)/.6745,l:gauss()*Math.max(
 function impactFrom(P,aim){const A=az(P,aim),D=dist(P,aim);const u={X:Math.cos(A),Y:Math.sin(A)},r={X:-Math.sin(A),Y:Math.cos(A)};const b=SIM3.bias,d=disp3(D);const along=b.dR+d.r,lat=D*Math.tan(b.dL)+d.l;return{X:aim.X+u.X*along+r.X*lat,Y:aim.Y+u.Y*along+r.Y*lat,H:aim.H};}
 $('#s3Fire').onclick=()=>{if(SIM3.busy||!LAST)return;const s=solveAdj();if(s.err){toast(s.err);return;}const P=gunPos(SIM3.adjI);aimModel(SIM3.adjI,s.azF,s.th);hud3(s);
   const B=impactFrom(P,SIM3.aimAdj);SIM3.busy=true;$('#s3Fire').disabled=true;log3('Batéria',`Výstrel! Let ${fmtN(s.tof,1)} s.`);launch3(P,B,s,0,'adj',()=>onAdjImpact(B,s));};
-function onAdjImpact(B,s){SIM3.busy=false;const T=LAST.m.T;const n=SIM3.shots.length+1;mark3(B,0xffc35a,2.6,String(n));
-  const lat=normS(az(OBS,B)-az(OBS,T)),u={X:Math.cos(az(OBS,T)),Y:Math.sin(az(OBS,T))};const rng=(B.X-T.X)*u.X+(B.Y-T.Y)*u.Y;const latR=m2r(Math.round(r2m(lat))),rngR=Math.round(rng/10)*10;
-  const miss=dist(B,T);const P=gunPos(SIM3.adjI);const c=computeCorr(P,OBS,T,latR,rngR);SIM3.lastC=c;SIM3.shots.push({n,latR,rngR,miss});hud3(s);
+function onAdjImpact(B,s){const OB3=obs3();SIM3.busy=false;const T=LAST.m.T;const n=SIM3.shots.length+1;mark3(B,0xffc35a,2.6,String(n));
+  const lat=normS(az(OB3,B)-az(OB3,T)),u={X:Math.cos(az(OB3,T)),Y:Math.sin(az(OB3,T))};const rng=(B.X-T.X)*u.X+(B.Y-T.Y)*u.Y;const latR=m2r(Math.round(r2m(lat))),rngR=Math.round(rng/10)*10;
+  const miss=dist(B,T);const P=gunPos(SIM3.adjI);const c=computeCorr(P,OB3,T,latR,rngR);SIM3.lastC=c;SIM3.shots.push({n,latR,rngR,miss});hud3(s);
   const txt=(Math.abs(r2m(latR))<.5?'Smer dobrý':`${latR<0?'Ľ':'P'} ${fmtMil(Math.abs(latR))}`)+', '+(rngR===0?'vzdialenosť dobrá':rngR>0?`ďalej ${rngR}`:`bližšie ${-rngR}`);
   const tol=+$('#s3Tol').value||50;$('#s3Obs').style.display='';$('#s3ObsT').textContent=txt;$('#s3ObsT').classList.toggle('ok',miss<=tol);$('#s3Cmp').innerHTML='';$('#s3S').value='';$('#s3D').value='';
   if(miss<=tol){log3('PZ',`${txt}. Zastrieľané, účinná paľba!`);SIM3.adjDone=true;$('#s3Me').style.display='none';$('#s3Eff').disabled=false;steps3(4);
@@ -1578,7 +1580,7 @@ $('#s3Hint').onclick=()=>{const c=SIM3.lastC;if(!c)return;const m=v=>fmtN(Math.a
 $$('#s3Mode button').forEach(b=>b.addEventListener('click',()=>{if(b.dataset.v==='auto'&&SIM3.lastC&&!SIM3.adjDone&&!SIM3.busy&&$('#s3Me').style.display!=='none'&&$('#s3Obs').style.display!=='none'){const c=SIM3.lastC;applyAdj(c.dS,c.dD,gunPos(SIM3.adjI));$('#s3Me').style.display='none';$('#s3Cmp').innerHTML=corrLine3('Zavedená oprava',c.dS,c.dD);$('#s3Fire').disabled=false;}}));
 $('#s3New').onclick=()=>{if(!T3.ready)return;calcMission();if(!LAST)return;buildWorld3();gunSel3();newTask3();cam3(T3.cam==='free'?'over':T3.cam);};
 $('#s3Skip').onclick=()=>{if(!LAST||SIM3.busy)return;SIM3.adjDone=true;log3('Batéria','Účinná paľba bez zastrieľania (podľa úplnej prípravy).');$('#s3Eff').disabled=false;steps3(4);$('#s3Eff').click();};
-$('#s3Ex').onchange=()=>{if(T3.ready&&LAST){buildWorld3();newTask3();cam3('over');}};
+$('#s3Ex').onchange=$('#s3Ob').onchange=()=>{if(T3.ready&&LAST){buildWorld3();newTask3();cam3('over');}};
 $('#s3Eff').onclick=()=>{if(!LAST||SIM3.busy)return;const T=LAST.m.T;const sh={X:SIM3.aimAdj.X-T.X,Y:SIM3.aimAdj.Y-T.Y};const ok=LAST.rows.filter(r=>!r.skip&&!r.err);if(!ok.length)return;
   SIM3.busy=true;$('#s3Eff').disabled=true;$('#s3Fire').disabled=true;steps3(4);const sel={s:LAST.s,a:LAST.a,ci:LAST.ci};
   const plan=ok.map(r=>{const P=gunPos(r.i);const aim={X:r.aim.X+sh.X,Y:r.aim.Y+sh.Y,H:r.aim.H};const s=solveGun(P,aim,{sel,dv:r.g.dv,zt:LAST.zt});return{r,P,aim,s};}).filter(x=>!x.s.err);
