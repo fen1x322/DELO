@@ -1247,7 +1247,7 @@ function renderObs(){$('#oX').value=OBS.X;$('#oY').value=OBS.Y;$('#oH').value=OB
 ['oX','oY','oH'].forEach(id=>$('#'+id).onchange=()=>{OBS={X:num('oX'),Y:num('oY'),H:num('oH')||0};saveObs();renderObs();});
 function computeCorr(G,O,T,latRad,rngM){const Aot=az(O,T),Dp=dist(O,T);const u={X:Math.cos(Aot),Y:Math.sin(Aot)},r={X:-Math.sin(Aot),Y:Math.cos(Aot)};
   const lat=Dp*Math.tan(latRad);const B={X:T.X+lat*r.X+rngM*u.X,Y:T.Y+lat*r.Y+rngM*u.Y,H:T.H};const Agt=az(G,T);const uG={X:Math.cos(Agt),Y:Math.sin(Agt)},rG={X:-Math.sin(Agt),Y:Math.cos(Agt)};
-  const v={X:T.X-B.X,Y:T.Y-B.Y};const dD=v.X*uG.X+v.Y*uG.Y,dL=v.X*rG.X+v.Y*rG.Y;return{dD,dS:Math.atan2(dL,dist(G,T)),B,miss:Math.hypot(v.X,v.Y),K:Dp/dist(G,T),Pu:normS(Agt-Aot),newAim:{X:T.X+v.X,Y:T.Y+v.Y,H:T.H}};}
+  const v={X:T.X-B.X,Y:T.Y-B.Y};const dD=v.X*uG.X+v.Y*uG.Y,dL=v.X*rG.X+v.Y*rG.Y;return{dD,dL,latM:lat,rngM,Dp,Dg:dist(G,T),dS:Math.atan2(dL,dist(G,T)),B,miss:Math.hypot(v.X,v.Y),K:Dp/dist(G,T),Pu:normS(Agt-Aot),newAim:{X:T.X+v.X,Y:T.Y+v.Y,H:T.H}};}
 let ZC=null;
 $('#zGo').onclick=()=>{const T=TGT();if(isNaN(T.X))return noTgt('#zOut');const lat=parseMil($('#zLat').value)*+pill('zSide'),rng=(num('zDist')||0)*+pill('zRng');
   if(isNaN(lat)){$('#zOut').innerHTML='<p class="warn">Zadaj odchýlku v smere v dielcoch.</p>';return;}
@@ -1569,7 +1569,12 @@ $('#s3Go').onclick=()=>{const s=parseMil($('#s3S').value),d=parseFloat($('#s3D')
   $('#s3Cmp').innerHTML=`<div class="cmp3"><span></span><span class="h">Tvoja</span><span class="h">Správne</span><span class="h">Smer</span><span>${fmtMil(s,{signed:true})}</span><span>${fmtMil(c.dS,{signed:true})}</span><span class="h">Vzdial.</span><span>${sgnM(d)}</span><span>${sgnM(c.dD)}</span></div>
    <p class="small" style="margin:8px 0 0" class="${good?'okc':'warn'}"><span class="${good?'okc':'warn'}">${good?'Správne – oprava zavedená.':'Rozdiel oproti výpočtu – zavádza sa tvoja oprava, uvidíš výsledok.'}</span></p>`;
   applyAdj(s,d,gunPos(SIM3.adjI));$('#s3Me').style.display='none';$('#s3Fire').disabled=false;};
-$('#s3Hint').onclick=()=>{const c=SIM3.lastC;if(!c)return;$('#s3Cmp').innerHTML=corrLine3('Riešenie',c.dS,c.dD)+`<p class="small muted" style="margin:4px 0 0">K = ${fmtN(c.K,2)}, uhol posunu ${fmtMil(c.Pu,{signed:true})}</p>`;};
+$('#s3Hint').onclick=()=>{const c=SIM3.lastC;if(!c)return;const m=v=>fmtN(Math.abs(Math.round(v)));
+  $('#s3Cmp').innerHTML=corrLine3('Riešenie',c.dS,c.dD)+`<ol class="small muted" style="margin:6px 0 0;padding-left:18px">
+   <li>Pozorovateľ vidí výbuch zo svojho miesta (PZ – cieľ ${fmtN(c.Dp)} m): ${m(c.latM)} m ${c.latM<0?'vľavo':'vpravo'} (${fmtN(c.Dp)} m × odchýlka v dielcoch / 1000) a ${m(c.rngM)} m ${c.rngM<0?'bližšie':'ďalej'}.</li>
+   <li>Čiara zbraň – cieľ (${fmtN(c.Dg)} m) je voči čiare PZ – cieľ pootočená o uhol posunu ${fmtMil(c.Pu,{signed:true})}, preto sa hlásené „vľavo/bližšie“ nedajú preniesť priamo.</li>
+   <li>Po pootočení na čiaru zbrane treba výbuch posunúť o ${m(c.dD)} m ${c.dD>=0?'ďalej':'bližšie'} a ${m(c.dL)} m ${c.dL>=0?'doprava':'doľava'}.</li>
+   <li>Smer: ${m(c.dL)} m / ${fmtN(c.Dg)} m × 1000 ≈ ${fmtMil(c.dS,{signed:true})} (K = ${fmtN(c.K,2)}).</li></ol>`;};
 $$('#s3Mode button').forEach(b=>b.addEventListener('click',()=>{if(b.dataset.v==='auto'&&SIM3.lastC&&!SIM3.adjDone&&!SIM3.busy&&$('#s3Me').style.display!=='none'&&$('#s3Obs').style.display!=='none'){const c=SIM3.lastC;applyAdj(c.dS,c.dD,gunPos(SIM3.adjI));$('#s3Me').style.display='none';$('#s3Cmp').innerHTML=corrLine3('Zavedená oprava',c.dS,c.dD);$('#s3Fire').disabled=false;}}));
 $('#s3New').onclick=()=>{if(!T3.ready)return;calcMission();if(!LAST)return;buildWorld3();gunSel3();newTask3();cam3(T3.cam==='free'?'over':T3.cam);};
 $('#s3Skip').onclick=()=>{if(!LAST||SIM3.busy)return;SIM3.adjDone=true;log3('Batéria','Účinná paľba bez zastrieľania (podľa úplnej prípravy).');$('#s3Eff').disabled=false;steps3(4);$('#s3Eff').click();};
