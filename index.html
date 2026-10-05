@@ -319,25 +319,32 @@ body.fo-on nav.tabs,body.fo-on #aiFab{display:none!important}
 <section class="view" id="v-ul"><div class="wrap">
   <h2><span class="code">B-02</span>Palebná úloha</h2>
   <p class="lede">Cieľ, druh paľby a munícia. Appka rozdelí paľbu medzi zbrane a vypočíta prvky pre každú.</p>
-  <div class="card">
-    <label class="f" style="margin-bottom:10px">Z evidencie cieľov<select id="uList"><option value="">– vyber uložený cieľ –</option></select></label>
+  <div class="card"><h3>Cieľ</h3>
     <div class="grid g3"><label class="f">Číslo cieľa<input type="text" id="uId" value="101"></label><label class="f">Typ cieľa<select id="uTT"></select></label><label class="f">Popis<input type="text" id="uName" placeholder="napr. v lesíku"></label></div>
+    <div class="small muted" style="margin:12px 0 4px">Poloha cieľa</div>
+    <div class="pills" id="uPos"><button data-v="xy" class="on">Súradnice</button><button data-v="pz">Od pozorovateľne</button><button data-v="sb">Od SB</button><button data-v="mg">MGRS</button><button data-v="ev">Z evidencie</button></div>
+    <div id="posPol" style="display:none;margin-top:10px">
+      <div class="grid g3"><label class="f">Smerník (dielce)<input type="text" id="uPA" placeholder="napr. 12-40" inputmode="decimal"></label><label class="f">Vzdialenosť (m)<input type="number" id="uPD" inputmode="decimal"></label><label class="f">Uhol sklonu (dielce)<input type="text" id="uPE" placeholder="0-00" inputmode="decimal"></label></div>
+      <details style="margin-top:6px"><summary class="small muted" id="posFrom" style="cursor:pointer">Stanovisko</summary>
+        <div class="grid g3" style="margin-top:6px"><label class="f">E<input type="number" id="uOY"></label><label class="f">N<input type="number" id="uOX"></label><label class="f">H<input type="number" id="uOH"></label></div></details></div>
+    <div id="posMg" style="display:none;margin-top:10px"><label class="f">MGRS<input type="text" id="uMg" placeholder="napr. 34U CV 12345 67890" autocapitalize="characters"></label></div>
+    <div id="posEv" style="display:none;margin-top:10px"><label class="f">Uložený cieľ<select id="uList"><option value="">– vyber uložený cieľ –</option></select></label></div>
     <div class="grid g3" style="margin-top:10px"><label class="f">E (východ)<input type="number" id="uY"></label><label class="f">N (sever)<input type="number" id="uX"></label><label class="f">H<input type="number" id="uH"></label></div>
-    <div class="grid g3" style="margin-top:10px"><label class="f">Front (m)<input type="number" id="uF" value="200"></label><label class="f">Hĺbka (m)<input type="number" id="uD" value="100"></label><label class="f">Smer frontu (dielce)<input type="text" id="uFA" placeholder="auto"></label></div>
+    <p class="small" id="posOut" style="margin:8px 0 0"></p>
+    <details style="margin-top:8px"><summary class="small muted" style="cursor:pointer">Rozmer cieľa</summary>
+      <div class="grid g3" style="margin-top:6px"><label class="f">Front (m)<input type="number" id="uF" value="200"></label><label class="f">Hĺbka (m)<input type="number" id="uD" value="100"></label><label class="f">Smer frontu (dielce)<input type="text" id="uFA" placeholder="auto"></label></div></details>
   </div>
-  <div class="card"><h3>Druh paľby</h3>
+  <div class="card"><h3>Paľba</h3>
     <div class="pills" id="uType"><button data-v="sus" class="on">Sústredená</button><button data-v="zat">Zátarasová</button><button data-v="dym">Dymová clona</button><button data-v="osv">Osvetlenie</button></div>
-    <div id="sheafBox" style="margin-top:12px"><span class="small muted">Vejár</span><div class="pills" id="uSheaf" style="margin-top:4px"><button data-v="otv" class="on">Otvorený (na front)</button><button data-v="par">Paralelný</button><button data-v="zbi">Zbiehavý</button></div></div>
-    <div id="zatBox" class="grid g2" style="margin-top:12px;display:none"><label class="f">Rýchlosť paľby (rán/min na zbraň)<input type="number" id="uZr" value="2"></label><label class="f">Trvanie (min)<input type="number" id="uZt" value="3"></label></div>
-    <div id="dymBox" class="grid g2" style="margin-top:12px;display:none"><label class="f">Posun zamerania proti vetru (m)<input type="number" id="uDs" value="150"></label><label class="f">Trvanie clony (min)<input type="number" id="uDt" value="5"></label></div>
-    <div id="osvBox" class="grid g4" style="margin-top:12px;display:none"><label class="f">Výška výbuchu (m)<input type="number" id="uOh" value="500"></label><label class="f">Počet zbraní<input type="number" id="uOn" value="2" min="1"></label><label class="f">Interval (s)<input type="number" id="uOi" value="40"></label><label class="f">Trvanie (min)<input type="number" id="uOt" value="4"></label></div>
-  </div>
-  <div class="card"><h3>Munícia a spotreba</h3>
-    <div class="grid g2"><label class="f">Strela<select id="uAmmo"></select></label><label class="f">Náplň<select id="uCh"></select></label>
-      <label class="f">Dráha<select id="uArc"><option value="low">Oblá</option><option value="high">Strmá</option></select></label>
-      <label class="f">Účel paľby<select id="uPur"><option value="uml">Umlčanie</option><option value="zni">Zničenie</option><option value="man">Ručne zadaný počet</option></select></label>
-      <label class="f">Zapaľovač<select id="uFz"></select></label><label class="f" id="fzHBox">Výška výbuchu (m)<input type="number" id="uFzH" value="15"></label></div>
-    <div class="grid g2" id="manBox" style="margin-top:10px;display:none"><label class="f">Rán na zbraň<input type="number" id="uRpg" value="4"></label></div>
+    <div class="grid g3" style="margin-top:12px"><label class="f">Strela<select id="uAmmo"></select></label><label class="f">Náplň<select id="uCh"></select></label><label class="f">Zapaľovač<select id="uFz"></select></label></div>
+    <div id="zatBox" class="grid g2" style="margin-top:10px;display:none"><label class="f">Rýchlosť paľby (rán/min na zbraň)<input type="number" id="uZr" value="2"></label><label class="f">Trvanie (min)<input type="number" id="uZt" value="3"></label></div>
+    <div id="dymBox" class="grid g2" style="margin-top:10px;display:none"><label class="f">Posun zamerania proti vetru (m)<input type="number" id="uDs" value="150"></label><label class="f">Trvanie clony (min)<input type="number" id="uDt" value="5"></label></div>
+    <div id="osvBox" class="grid g4" style="margin-top:10px;display:none"><label class="f">Výška výbuchu (m)<input type="number" id="uOh" value="500"></label><label class="f">Počet zbraní<input type="number" id="uOn" value="2" min="1"></label><label class="f">Interval (s)<input type="number" id="uOi" value="40"></label><label class="f">Trvanie (min)<input type="number" id="uOt" value="4"></label></div>
+    <details style="margin-top:10px"><summary class="small muted" style="cursor:pointer">Ďalšie nastavenia (vejár, dráha, spotreba)</summary>
+      <div id="sheafBox" style="margin-top:8px"><span class="small muted">Vejár</span><div class="pills" id="uSheaf" style="margin-top:4px"><button data-v="otv" class="on">Otvorený (na front)</button><button data-v="par">Paralelný</button><button data-v="zbi">Zbiehavý</button></div></div>
+      <div class="grid g2" style="margin-top:10px"><label class="f">Dráha<select id="uArc"><option value="low">Oblá</option><option value="high">Strmá</option></select></label>
+        <label class="f">Účel paľby<select id="uPur"><option value="uml">Umlčanie</option><option value="zni">Zničenie</option><option value="man">Ručne zadaný počet</option></select></label>
+        <label class="f" id="fzHBox">Výška výbuchu (m)<input type="number" id="uFzH" value="15"></label><label class="f" id="manBox" style="display:none">Rán na zbraň<input type="number" id="uRpg" value="4"></label></div></details>
   </div>
   <details class="card"><summary>Meteo podmienky (ručne)</summary>
     <p class="small muted" style="margin-top:0" id="mNote">Použijú sa, keď nie je aktívny meteo bulletin.</p>
@@ -345,7 +352,7 @@ body.fo-on nav.tabs,body.fo-on #aiFab{display:none!important}
       <label class="f">Vietor (m/s)<input type="number" id="mW" value="0"></label><label class="f">Vietor odkiaľ (dielce)<input type="text" id="mWd" value="0-00"></label>
       <label class="f">Teplota náplne (°C)<input type="number" id="mTn" value="15"></label><label class="f" id="mQBox">Hmotnostné znaky strely (±)<input type="number" id="mQ" value="0" step="1"></label></div>
   </details>
-  <div class="row" style="margin-bottom:14px"><button class="btn pri" id="uGo">Vypočítať prvky batérie</button><button class="btn" id="uSave">Uložiť do plánu</button><button class="btn" id="uNew" style="display:none">Uložiť ako novú</button><button class="btn sm" id="uFromB">Cieľ 5 km pred SB</button></div>
+  <div class="row" style="margin-bottom:14px"><button class="btn pri" id="uGo">Vypočítať prvky batérie</button><button class="btn" id="uSave">Uložiť do plánu</button><button class="btn" id="uNew" style="display:none">Uložiť ako novú</button><button class="btn sm" id="uFromB" style="display:none">Cieľ 5 km pred SB</button></div>
   <div id="uOut"></div>
 </div></section>
 
@@ -975,7 +982,7 @@ $$('[data-go]').forEach(b=>b.onclick=()=>show(b.dataset.go));
 $('#back').onclick=()=>show('mod');
 function show(v){CUR=v;const navV=SUB.includes(v)?'mod':v;$$('#tabs button').forEach(b=>b.classList.toggle('on',b.dataset.v===navV));
   $$('.view').forEach(s=>s.classList.toggle('on',s.id==='v-'+v));$('#back').classList.toggle('show',SUB.includes(v));$('.view.on').scrollTop=0;
-  hdr();if(v==='plan')renderPlan();if(v==='str')renderObs();if(v==='met')renderMet();if(v==='bez')renderOwn();if(v==='sur'){cvFields();renderPts();}if(v==='cie')renderTargets();if(v==='prz')renderRC();if(v==='cff')renderCFF();if(v==='pov')renderPov();if(v==='chk')renderChk();if(v==='ai'){renderAI();setTimeout(()=>$('#aiIn').focus(),50);}$('#aiFab').classList.toggle('hide',['ai','t3d','map'].includes(v));document.body.classList.toggle('fo-on',v==='fo');if(v==='fo')foOpen();if(v==='pri')renderPri();if(v==='slo')renderSlo();if(v==='teh')renderTeh();if(v==='tre')renderTS();if(v==='pro'){$('#prTitle').value=PR.title;$('#prBy').value=PR.by;$('#prNote').value=PR.note;$('#prOut').innerHTML=protoHTML();}if(v==='map')requestAnimationFrame(()=>{if(MAP.cx==null)mapFit();else renderMap();});if(v==='nas'){if(!$('#edSys').options.length)$('#edSys').innerHTML=Object.entries(SYS).map(([k,x])=>`<option value="${k}">${x.name}</option>`).join('');$('#edSys').value=BAT.sys;ED_AM=null;renderEd();renderTT();}if(v==='t3d')enter3D();else if(typeof T3!=='undefined')T3.visible=false;}
+  hdr();if(v==='plan')renderPlan();if(v==='ul')posUI();if(v==='str')renderObs();if(v==='met')renderMet();if(v==='bez')renderOwn();if(v==='sur'){cvFields();renderPts();}if(v==='cie')renderTargets();if(v==='prz')renderRC();if(v==='cff')renderCFF();if(v==='pov')renderPov();if(v==='chk')renderChk();if(v==='ai'){renderAI();setTimeout(()=>$('#aiIn').focus(),50);}$('#aiFab').classList.toggle('hide',['ai','t3d','map'].includes(v));document.body.classList.toggle('fo-on',v==='fo');if(v==='fo')foOpen();if(v==='pri')renderPri();if(v==='slo')renderSlo();if(v==='teh')renderTeh();if(v==='tre')renderTS();if(v==='pro'){$('#prTitle').value=PR.title;$('#prBy').value=PR.by;$('#prNote').value=PR.note;$('#prOut').innerHTML=protoHTML();}if(v==='map')requestAnimationFrame(()=>{if(MAP.cx==null)mapFit();else renderMap();});if(v==='nas'){if(!$('#edSys').options.length)$('#edSys').innerHTML=Object.entries(SYS).map(([k,x])=>`<option value="${k}">${x.name}</option>`).join('');$('#edSys').value=BAT.sys;ED_AM=null;renderEd();renderTT();}if(v==='t3d')enter3D();else if(typeof T3!=='undefined')T3.visible=false;}
 function hdr(){$('#hT').textContent=VIEWS[CUR][0];$('#hS').textContent=`${SYS[BAT.sys].name} · ${BAT.guns.filter(g=>g.on).length}/${BAT.n} zbraní`+(CFG.call?' · '+CFG.call:'');}
 $$('.seg button').forEach(b=>b.onclick=()=>{CFG.mil=+b.dataset.mil;saveCfg();$$('.seg button').forEach(x=>x.classList.toggle('on',x===b));refreshUnits();});
 function refreshUnits(){try{foSync();}catch(e){}fillZS();renderBat();if(LAST)calcMission();renderPlan();renderMet();renderObs();}
@@ -1034,6 +1041,25 @@ $('#uFz').onchange=fzUI;
 function fillTTsel(){const o=TT.map(t=>`<option value="${t.id}">${esc(t.n)}</option>`).join('');['uTT','ctT','rcT'].forEach(id=>{const e=$('#'+id);const v=e.value;e.innerHTML=o;if(v)e.value=v;});}
 function fillUList(){$('#uList').innerHTML='<option value="">– vyber uložený cieľ –</option>'+TARGETS.map((t,i)=>`<option value="${i}">${esc(t.id)} – ${esc(ttOf(t.tt).n)}${t.name?', '+esc(t.name):''}</option>`).join('');}
 $('#uList').onchange=()=>{const t=TARGETS[+$('#uList').value];if(t)useTarget(t,false);$('#uList').value='';};
+
+/* zadanie polohy cieľa priamo v úlohe: súradnice / polárne od PZ alebo SB (priama geodetická úloha) / MGRS / evidencia */
+const posOrigin=()=>pill('uPos')==='sb'?BAT.SB:OBS;
+function posUI(){const v=pill('uPos'),pol=v==='pz'||v==='sb';$('#posPol').style.display=pol?'':'none';$('#posMg').style.display=v==='mg'?'':'none';$('#posEv').style.display=v==='ev'?'':'none';
+  if(pol){const O=posOrigin();$('#uOY').value=O.Y;$('#uOX').value=O.X;$('#uOH').value=O.H;$('#posFrom').textContent=`${v==='pz'?'Pozorovateľňa':'Stred batérie'}: E ${O.Y}, N ${O.X}, H ${O.H} (upraviť)`;if($('#uPA').value&&$('#uPD').value)return posCalc();}
+  posInfo();}
+function posCalc(){const v=pill('uPos');
+  if(v==='pz'||v==='sb'){const O=posOrigin(),A=parseMil($('#uPA').value),D=num('uPD');if(isNaN(A)||isNaN(D)||D<=0){posInfo('Zadaj smerník a vzdialenosť.');return;}const E=parseMil($('#uPE').value);
+    setTGT({X:O.X+D*Math.cos(A),Y:O.Y+D*Math.sin(A),H:isNaN(E)?O.H:O.H+D*Math.tan(E)});}
+  else if(v==='mg'){if(!$('#uMg').value.trim())return posInfo();const r=fromMGRS($('#uMg').value);if(!r){posInfo('Neplatný MGRS – napr. 34U CV 12345 67890.');return;}const P=llToApp(r.lat,r.lon);$('#uX').value=Math.round(P.X);$('#uY').value=Math.round(P.Y);}
+  posInfo();}
+function posInfo(msg){const T=TGT();if(msg||isNaN(T.X)||isNaN(T.Y)){$('#posOut').innerHTML=msg?`<span class="warn">${msg}</span>`:'<span class="muted">Zadaj polohu cieľa.</span>';return;}
+  $('#posOut').innerHTML=`Od SB <b>${fmtN(dist(BAT.SB,T))} m</b>, smerník <b>${fmtMil(az(BAT.SB,T),{az:true})}</b>${isNaN(T.H)?'':', prevýšenie '+sgnM(T.H-BAT.SB.H)}${isUTM(T)?' · '+esc(mgrsOf(T)):''}`;}
+$$('#uPos button').forEach(b=>b.addEventListener('click',posUI));
+['uPA','uPD','uPE','uMg'].forEach(id=>$('#'+id).addEventListener('input',posCalc));
+['uX','uY','uH'].forEach(id=>$('#'+id).addEventListener('input',()=>posInfo()));
+$('#uList').addEventListener('change',()=>posInfo());
+['uOX','uOY','uOH'].forEach(id=>$('#'+id).addEventListener('change',()=>{const P={X:num('uOX'),Y:num('uOY'),H:num('uOH')||0};if(isNaN(P.X)||isNaN(P.Y))return;
+  if(pill('uPos')==='sb')setSB(P);else{OBS={X:Math.round(P.X),Y:Math.round(P.Y),H:Math.round(P.H)};saveObs();try{renderObs();}catch(e){}}posUI();posCalc();}));
 function useTarget(t,go=true){$('#uId').value=t.id;$('#uTT').value=t.tt;$('#uName').value=t.name||'';setTGT(t);$('#uF').value=t.F;$('#uD').value=t.Dp;if(go){show('ul');toast('Cieľ '+t.id+' v palebnej úlohe');}}
 $$('#uType button').forEach(b=>b.addEventListener('click',()=>{typeUI();fillAmmo();fzUI();}));
 function typeUI(){const t=pill('uType');$('#sheafBox').style.display=t==='sus'?'':'none';$('#zatBox').style.display=t==='zat'?'':'none';$('#dymBox').style.display=t==='dym'?'':'none';$('#osvBox').style.display=t==='osv'?'':'none';
