@@ -187,6 +187,18 @@ pre.cmd{white-space:pre-wrap;background:var(--panel2);border:1px solid var(--lin
 .cams3 button{background:color-mix(in srgb,var(--bg) 82%,transparent);border:1px solid var(--line);color:var(--text);padding:5px 9px;font-family:var(--disp);font-size:12.5px;cursor:pointer;border-radius:2px}
 .cams3 button.on{border-color:var(--acc);color:var(--acc)}
 #reticle{position:absolute;inset:0;pointer-events:none;display:none}
+#map3{position:absolute;inset:0;display:none;z-index:1;width:100%;height:100%;touch-action:none;cursor:crosshair;background:var(--panel2)}
+#map3 text{font-family:var(--disp);font-size:11px;fill:var(--text)}
+.mapbar3{position:absolute;right:8px;top:62px;z-index:3;display:none;max-width:min(270px,58%);font-size:12px;background:color-mix(in srgb,var(--bg) 88%,transparent);border:1px solid var(--line);padding:5px 7px}
+.mapbar3 .btn{min-height:30px;padding:3px 8px;font-size:12px}
+.mapbar3 b{font-family:var(--disp)}
+.bino3{position:absolute;right:8px;top:50%;transform:translateY(-50%);z-index:3;display:none;gap:4px;flex-direction:column}
+.bino3 button,.snd3{background:color-mix(in srgb,var(--bg) 82%,transparent);border:1px solid var(--line);color:var(--text);min-width:36px;height:36px;font-size:15px;cursor:pointer;border-radius:2px}
+.snd3{position:absolute;left:8px;top:62px;z-index:3}
+.snd3.off{opacity:.45;text-decoration:line-through}
+.guide3 p{margin:6px 0}
+.ev3{width:100%;border-collapse:collapse;font-size:13px;margin-top:6px}.ev3 th,.ev3 td{border-bottom:1px solid var(--line);padding:4px 5px;text-align:left;vertical-align:top}.ev3 th{color:var(--muted);font-weight:500;font-size:12px}
+.fb3{border-left:3px solid var(--line);padding:6px 9px;margin-top:8px;font-size:13px;background:var(--panel2)}.fb3.ok{border-color:var(--ok)}.fb3.bad{border-color:var(--warn,#e5a03a)}.fb3 ul{margin:4px 0 0;padding-left:18px}
 #reticle text{font-family:var(--disp);font-size:11px;fill:#e8f0e0}
 #msg3{position:absolute;inset:0;display:none;align-items:center;justify-content:center;text-align:center;padding:20px;color:var(--muted)}
 #panel3{flex:none;max-height:52%;overflow-y:auto;background:var(--panel);border-top:1px solid var(--line);padding:12px 14px 16px}
@@ -530,7 +542,11 @@ body.fo-on nav.tabs,body.fo-on #aiFab{display:none!important}
     <div class="hud3"><div class="box">Fáza<b id="h3Ph">–</b></div><div class="box">Smer<b id="h3S">–</b></div><div class="box">Náklon<b id="h3N">–</b></div><div class="box">Rana<b id="h3R">0</b></div></div>
     <svg id="reticle" aria-hidden="true"></svg>
     <div id="msg3"></div>
-    <div class="cams3" id="cams3"><button data-c="over" class="on">Prehľad</button><button data-c="bat">Batéria</button><button data-c="obs">Ďalekohľad PZ</button><button data-c="tgt">Cieľ</button><button data-c="shell">Strela</button></div>
+    <div class="cams3" id="cams3"><button data-c="over" class="on">Prehľad</button><button data-c="bat">Batéria</button><button data-c="obs">Ďalekohľad PZ</button><button data-c="tgt">Cieľ</button><button data-c="shell">Strela</button><button data-c="map">Mapa</button></div>
+    <svg id="map3" aria-label="Mapa palebnej úlohy"></svg>
+    <div class="mapbar3" id="mapbar3"><div id="mapInfo3" class="small">Meranie: ťukni na 2 body (prichytia sa k objektom).</div><div class="row" style="gap:4px;margin-top:6px"><button class="btn sm" data-m3="in">+</button><button class="btn sm" data-m3="out">−</button><button class="btn sm" data-m3="fit">Celá úloha</button><button class="btn sm" data-m3="clr">Zmazať meranie</button></div></div>
+    <div class="bino3" id="bino3"><button data-b="l" aria-label="Doľava">◀</button><button data-b="u" aria-label="Hore">▲</button><button data-b="c" aria-label="Na cieľ">⌖</button><button data-b="d" aria-label="Dole">▼</button><button data-b="r" aria-label="Doprava">▶</button></div>
+    <button class="snd3" id="snd3" aria-label="Zvuk">🔊</button>
   </div>
   <div id="panel3">
     <div class="steps3" id="steps3"><div>1 Cieľ</div><div>2 Prvky</div><div>3 Zastrieľanie</div><div>4 Účinná paľba</div><div>5 Vyhodnotenie</div></div>
@@ -539,6 +555,7 @@ body.fo-on nav.tabs,body.fo-on #aiFab{display:none!important}
       <div class="pills" id="s3Mode"><button data-v="me" class="on">Opravu počítam ja</button><button data-v="auto">Automaticky</button></div>
       <button class="btn pri" id="s3Fire">Paľ</button>
     </div>
+    <div class="small muted" style="margin:2px 0 4px">Spôsob opráv</div><div class="pills" id="s3Ref" style="margin-bottom:8px"><button data-v="pz">Cez K a uhol posunu (hlásenie z PZ)</button><button data-v="gun">Opak hlásenia (hlásenie k čiare zbraň – cieľ)</button></div>
     <div id="s3Status" class="small muted"></div>
     <div id="s3Obs" style="display:none;margin-top:10px">
       <span class="small muted">Hlásenie pozorovateľa</span><div class="obs3" id="s3ObsT"></div>
@@ -548,6 +565,17 @@ body.fo-on nav.tabs,body.fo-on #aiFab{display:none!important}
     </div>
     <div class="row" style="margin-top:10px"><button class="btn" id="s3Eff" disabled>Účinná paľba batérie</button><button class="btn sm" id="s3Skip">Bez zastrieľania</button></div>
     <div id="s3Res" style="margin-top:10px"></div>
+    <details style="margin-top:10px"><summary class="small" style="cursor:pointer;font-family:var(--disp);font-weight:600">Návod – ako sa počítajú opravy</summary><div class="small guide3">
+      <p><b>1. Hlásenie pozorovateľa</b> hovorí, kde výbuch <b>je</b> voči cieľu z pohľadu pozorovateľne (PZ): smer v dielcoch (Ľ = vľavo, P = vpravo) a vzdialenosť v metroch (bližšie / ďalej). Odchýlku v smere odmeriaš ďalekohľadom – dieliky stupnice od stredu (cieľa) po výbuch.</p>
+      <p><b>2. Oprava ide vždy opačne</b> ako odchýlka: výbuch vpravo → oprava doľava (−), výbuch ďalej → oprava bližšie (−). Znamienka v appke: smer + doprava, vzdialenosť + ďalej.</p>
+      <p><b>3. Pozorovateľ na čiare streľby</b> (pri zbrani, K = 1, uhol posunu 0): oprava = opačná hodnota hlásenia. P 1-20, ďalej 100 → oprava −1-20, −100 m.</p>
+      <p><b>4. Pozorovateľ bokom</b> (PZ na svojich súradniciach) – odchýlku treba prepočítať:<br>
+      • odchýlka v metroch = vzdialenosť PZ – cieľ × dielce / 1000 (vzorec tisíciny),<br>
+      • koeficient vzdialenosti <b>K = D<sub>PZ</sub> / D<sub>zbraň</sub></b>, približná oprava smeru = −odchýlka × K,<br>
+      • <b>uhol posunu</b> P<sub>u</sub> = uhol medzi čiarou PZ – cieľ a zbraň – cieľ. Do 3-00 stačí približné pravidlo (bod 4 a vzdialenosť opačne). Nad 3-00 sa bočná odchýlka čiastočne premieta do vzdialenosti a „bližšie/ďalej“ do smeru – treba výbuch pootočiť na čiaru zbrane (tak to robí „Ukázať riešenie“).</p>
+      <p><b>5. Oprava smeru</b> v dielcoch pre zbraň = bočný posun v metroch / D<sub>zbraň</sub> × 1000.</p>
+      <p><b>6. Zastrieľané</b> je, keď výbuch padne do nastavenej tolerancie (napr. 50 m). Potom ide účinná paľba celej batérie s rovnakými opravami.</p>
+      <p><b>Tip:</b> v pohľade „Ďalekohľad PZ“ môžeš ďalekohľadom hýbať (ťahaním, šípkami alebo tlačidlami). Dole sa ukazuje, o koľko dielcov je stred od cieľa – nastav stred na výbuch a máš odchýlku. V pohľade „Mapa“ si odmeriaš vzdialenosť a smerník medzi ľubovoľnými bodmi.</p></div></details>
     <details style="margin-top:10px" open><summary class="small" style="cursor:pointer;font-family:var(--disp);font-weight:600">Rádiový záznam</summary><div class="log3" id="s3Log" style="margin-top:6px"></div></details>
     <details style="margin-top:10px"><summary class="small" style="cursor:pointer;font-family:var(--disp);font-weight:600">Nastavenia simulácie</summary>
       <div class="grid g2" style="margin-top:8px">
@@ -556,7 +584,8 @@ body.fo-on nav.tabs,body.fo-on #aiFab{display:none!important}
         <label class="f">Náročnosť<select id="s3Dif"><option value="0.5">Ľahká</option><option value="1" selected>Normálna</option><option value="1.8">Ťažká</option></select></label>
         <label class="f">Zastrieľané do (m)<input type="number" id="s3Tol" value="50"></label>
         <label class="f">Zastrieľava zbraň č.<select id="s3Gun"></select></label>
-        <label class="f">Pozorovateľ<select id="s3Ob"><option value="gun" selected>Na čiare streľby (oprava = opak hlásenia)</option><option value="pz">Na pozorovateľni PZ – bokom (K, uhol posunu)</option></select></label>
+                <label class="f" style="flex-direction:row;align-items:center;gap:8px"><input type="checkbox" id="s3Snd" style="width:20px;height:20px">Zvuk výstrelu a výbuchu</label>
+        <label class="f" style="flex-direction:row;align-items:center;gap:8px"><input type="checkbox" id="s3Voice" style="width:20px;height:20px">Hlásenia hlasom</label>
       </div></details>
   </div>
 </section>
@@ -1414,22 +1443,24 @@ $('#bkReset').onclick=()=>{if(!confirm('Naozaj vymazať všetky dáta aplikácie
 
 /* ================= 3D PALEBNÁ ÚLOHA ================= */
 const T3={ready:false,loading:false,failed:false,cbs:[],visible:false,sig:'',cam:'over',exag:2,origin:{X:0,Y:0,H:0},rbf:null};
-const SIM3={phase:0,shots:[],log:[],bias:null,adjI:0,aimAdj:null,R:null,lastC:null,adjDone:false,busy:false,effect:null};
+const SIM3={corrs:[],hints:0,t0:0,tAdj:0,effImps:[],phase:0,shots:[],log:[],bias:null,adjI:0,aimAdj:null,R:null,lastC:null,adjDone:false,busy:false,effect:null};
 let R3,SC3,CAM3,CTL3,TER3,MRK3,FX3,IMP3,SHELLS=[],GUNS3=[];
 function load3D(cb){if(window.THREE&&THREE.OrbitControls)return cb();if(T3.failed)return msg3('3D knižnicu sa nepodarilo načítať. Pri prvom otvorení 3D treba internet – potom skús znova.');T3.cbs.push(cb);if(T3.loading)return;T3.loading=true;msg3('Načítavam 3D…');
   const add=(src,ok)=>{const s=document.createElement('script');s.src=src;s.onload=ok;s.onerror=()=>{T3.failed=true;T3.loading=false;msg3('3D knižnicu sa nepodarilo načítať. Pri prvom otvorení 3D treba internet.');};document.head.appendChild(s);};
   add('https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js',()=>add('https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js',()=>{T3.loading=false;msg3('');T3.cbs.splice(0).forEach(f=>f());}));}
 function msg3(t){const m=$('#msg3');m.textContent=t;m.style.display=t?'flex':'none';}
 function enter3D(){T3.visible=true;load3D(()=>{if(!T3.ready)init3D();requestAnimationFrame(()=>{resize3D();const sg=sig3();if(sg!==T3.sig){if(!LAST||LAST.m.sys!==BAT.sys)calcMission();if(!LAST){msg3('Najprv zadaj cieľ v karte Úloha.');return;}msg3('');buildWorld3();newTask3();cam3(T3.cam);}else cam3(T3.cam);});});}
-function obs3(){if($('#s3Ob').value!=='gun')return OBS;const i=typeof SIM3!=='undefined'&&SIM3.adjI!=null&&BAT.guns[SIM3.adjI]?SIM3.adjI:-1;const P=i>=0?gunPos(i):BAT.SB;return{X:P.X,Y:P.Y,H:P.H};}
-function sig3(){const T=TGT();return JSON.stringify([$('#uTT').value,BAT.SB,BAT.guns,BAT.sys,BAT.ZS,OBS,T,$('#s3Ex').value,$('#s3Ob').value,LAST&&LAST.m.type,LAST&&LAST.m.F,LAST&&LAST.m.Dp,LAST&&LAST.m.sheaf]);}
+function obs3(){return OBS;}
+/* voči čomu sa hlási výbuch: PZ (opravy cez K a uhol posunu) alebo čiara zbraň – cieľ (oprava = opak hlásenia) */
+function ref3(){if(pill('s3Ref')!=='gun')return OBS;const i=SIM3.adjI!=null&&BAT.guns[SIM3.adjI]?SIM3.adjI:-1;const P=i>=0?gunPos(i):BAT.SB;return{X:P.X,Y:P.Y,H:P.H};}
+function sig3(){const T=TGT();return JSON.stringify([$('#uTT').value,BAT.SB,BAT.guns,BAT.sys,BAT.ZS,OBS,T,$('#s3Ex').value,LAST&&LAST.m.type,LAST&&LAST.m.F,LAST&&LAST.m.Dp,LAST&&LAST.m.sheaf]);}
 function init3D(){const st=$('#stage3');R3=new THREE.WebGLRenderer({antialias:true});R3.setPixelRatio(Math.min(2,window.devicePixelRatio));st.prepend(R3.domElement);
   SC3=new THREE.Scene();CAM3=new THREE.PerspectiveCamera(50,1,.5,80000);CTL3=new THREE.OrbitControls(CAM3,R3.domElement);CTL3.enableDamping=true;CTL3.maxPolarAngle=Math.PI*.495;
   CTL3.addEventListener('start',()=>{if(T3.cam!=='over'&&T3.cam!=='free'){T3.cam='free';$$('#cams3 button').forEach(b=>b.classList.remove('on'));reticle();}});
   SC3.add(new THREE.HemisphereLight(0xe8eadc,0x2e3424,.9));const sun=new THREE.DirectionalLight(0xfff2da,.8);sun.position.set(-1,1.4,.6);SC3.add(sun);
   TER3=new THREE.Group();MRK3=new THREE.Group();FX3=new THREE.Group();IMP3=new THREE.Group();SC3.add(TER3,MRK3,FX3,IMP3);
   window.addEventListener('resize',resize3D);T3.ready=true;requestAnimationFrame(loop3);}
-function resize3D(){if(!T3.ready)return;const st=$('#stage3');const w=st.clientWidth,h=st.clientHeight;if(!w||!h)return;R3.setSize(w,h,false);CAM3.aspect=w/h;if(T3.cam==='obs')obsFov();CAM3.updateProjectionMatrix();reticle();}
+function resize3D(){if(!T3.ready)return;if(T3.cam==='map')map3Render();const st=$('#stage3');const w=st.clientWidth,h=st.clientHeight;if(!w||!h)return;R3.setSize(w,h,false);CAM3.aspect=w/h;if(T3.cam==='obs')obsFov();CAM3.updateProjectionMatrix();reticle();}
 function w2s(X,Y,H){const o=T3.origin;return new THREE.Vector3((Y-o.Y)/10,(H-o.H)*T3.exag/10,-(X-o.X)/10);}
 function noise3(X,Y){return 55*Math.sin(X/1700+1.3)*Math.cos(Y/2100)+30*Math.sin((X+Y)/900)+16*Math.cos(X/430-Y/610)+9*Math.sin(Y/260)*Math.cos(X/310);}
 function buildRBF3(P){const sig=1200,phi=d=>Math.exp(-d*d/(2*sig*sig));const n=P.length,M=P.map(a=>P.map(b=>phi(dist(a,b)))),c=P.map(p=>p.H-(T3.origin.H+noise3(p.X,p.Y)));
@@ -1500,12 +1531,12 @@ function buildWorld3(){const OB3=obs3();T3.exag=+$('#s3Ex').value;const T=LAST.m
   BAT.guns.forEach((g,i)=>{if(!g.on){GUNS3[i]=null;return;}const P=gunPos(i);const m=gunModel(BAT.sys);m.g.position.copy(w2s(P.X,P.Y,hAt(P.X,P.Y)));MRK3.add(m.g);GUNS3[i]=m;const r=LAST.rows.find(x=>x.i===i);aimModel(i,r&&r.azF!=null?r.azF:BAT.ZS,r&&r.th?r.th:.1);});
   const sp=w2s(SB.X,SB.Y,hAt(SB.X,SB.Y));const bp=pole3(cAcc,18);bp.position.y+=4;bp.position.copy(sp);MRK3.add(bp);MRK3.add(label3('Batéria',sp.clone().add(new THREE.Vector3(0,32,0)),'#f2a23a'));
   T3.sig=sig3();}
-function cam3(m){const OB3=obs3();T3.cam=m;$$('#cams3 button').forEach(b=>b.classList.toggle('on',b.dataset.c===m));if(!LAST||!T3.ready)return;const T=w2s(LAST.m.T.X,LAST.m.T.Y,LAST.m.T.H),G=w2s(BAT.SB.X,BAT.SB.Y,BAT.SB.H),O=w2s(OB3.X,OB3.Y,OB3.H+2);
+function cam3(m){const OB3=obs3();T3.cam=m;$$('#cams3 button').forEach(b=>b.classList.toggle('on',b.dataset.c===m));const isMap=m==='map';$('#map3').style.display=isMap?'block':'none';$('#mapbar3').style.display=isMap?'block':'none';$('#bino3').style.display=m==='obs'?'flex':'none';if(!LAST||!T3.ready)return;if(isMap){CTL3.enabled=false;reticle();map3Show();return;}const T=w2s(LAST.m.T.X,LAST.m.T.Y,LAST.m.T.H),G=w2s(BAT.SB.X,BAT.SB.Y,BAT.SB.H),O=w2s(OB3.X,OB3.Y,OB3.H+2);
   CTL3.enabled=m!=='shell'&&m!=='obs';CAM3.fov=50;[MRK3,IMP3].forEach(g=>g.children.forEach(o=>{if(o.isSprite)o.visible=m!=='obs';}));
   if(m==='over'){const d=G.distanceTo(T),dir=T.clone().sub(G).setY(0).normalize(),side=new THREE.Vector3(-dir.z,0,dir.x),k=Math.max(1,.9/CAM3.aspect);const c=G.clone().lerp(T,.55);CAM3.position.copy(c).add(dir.clone().multiplyScalar(-d*.95*k)).add(side.multiplyScalar(d*.28*k)).add(new THREE.Vector3(0,d*.6*k,0));CTL3.target.copy(c);}
   else if(m==='bat'){const dir=T.clone().sub(G).setY(0).normalize();CAM3.position.copy(G).add(dir.clone().multiplyScalar(-26)).add(new THREE.Vector3(0,9,0)).add(new THREE.Vector3(-dir.z,0,dir.x).multiplyScalar(16));CTL3.target.copy(G).add(dir.multiplyScalar(10));}
   else if(m==='tgt'){const dir=T.clone().sub(G).setY(0).normalize();CAM3.position.copy(T).add(dir.clone().multiplyScalar(-60)).add(new THREE.Vector3(-dir.z,0,dir.x).multiplyScalar(45)).add(new THREE.Vector3(0,40,0));CTL3.target.copy(T);}
-  else if(m==='obs'){CAM3.position.copy(O);CAM3.lookAt(T);obsFov();}
+  else if(m==='obs'){CAM3.position.copy(O);obsFov();obsLook();}
   CAM3.updateProjectionMatrix();if(m!=='obs'&&m!=='shell')CTL3.update();reticle();}
 const OBS_HFOV=8*RAD;
 function obsFov(){CAM3.fov=2*Math.atan(Math.tan(OBS_HFOV/2)/CAM3.aspect)/RAD;}
@@ -1513,7 +1544,7 @@ function reticle(){const r=$('#reticle');if(T3.cam!=='obs'||!T3.ready){r.style.d
   const f=(W/2)/Math.tan(OBS_HFOV/2),cx=W/2,cy=H/2;const px=mil=>f*Math.tan(m2r(mil));const step=10,maxM=Math.floor(r2m(OBS_HFOV/2)/step)*step;let s=`<line x1="0" y1="${cy}" x2="${W}" y2="${cy}" stroke="#e8f0e0" stroke-width="1" opacity=".7"/><line x1="${cx}" y1="${cy-px(40)}" x2="${cx}" y2="${cy+px(40)}" stroke="#e8f0e0" stroke-width="1" opacity=".7"/>`;
   for(let m=-maxM;m<=maxM;m+=step){if(!m)continue;const x=cx+px(m);const big=m%50===0;s+=`<line x1="${x}" y1="${cy-(big?10:5)}" x2="${x}" y2="${cy+(big?10:5)}" stroke="#e8f0e0" stroke-width="${big?1.6:1}"/>`;if(big)s+=`<text x="${x}" y="${cy-14}" text-anchor="middle">${MILc()===6000?fmtMil(m2r(Math.abs(m))):Math.abs(m)}</text>`;}
   for(let m=-30;m<=30;m+=step){if(!m)continue;const y=cy+px(m);s+=`<line x1="${cx-5}" y1="${y}" x2="${cx+5}" y2="${y}" stroke="#e8f0e0"/>`;}
-  s+=`<circle cx="${cx}" cy="${cy}" r="${Math.min(W,H)*.47}" fill="none" stroke="#000" stroke-width="${Math.max(W,H)}" opacity=".55"/><text x="${cx}" y="${H-14}" text-anchor="middle">ďalekohľad PZ – dielik ${MILc()===6000?'0-10':'10'}</text>`;r.innerHTML=s;}
+  s+=`<circle cx="${cx}" cy="${cy}" r="${Math.min(W,H)*.47}" fill="none" stroke="#000" stroke-width="${Math.max(W,H)}" opacity=".55"/><text x="${cx}" y="${H-66}" text-anchor="middle" style="font-size:13px">stred: smer ${LAST?fmtMil(normA(az(OBS,LAST.m.T)+T3.oAz),{az:true}):'–'} · od cieľa ${Math.abs(r2m(T3.oAz))<.5?'0':(T3.oAz<0?'Ľ ':'P ')+fmtMil(Math.abs(T3.oAz))}</text><text x="${cx}" y="${H-50}" text-anchor="middle">ďalekohľad PZ – dielik ${MILc()===6000?'0-10':'10'} · ťahaj alebo šípky</text>`;r.innerHTML=s;}
 $$('#cams3 button').forEach(b=>b.onclick=()=>cam3(b.dataset.c));
 
 /* --- shells & effects --- */
@@ -1522,26 +1553,27 @@ function launch3(P,impact,sol,delay,kind,onEnd){const q=traj({...sol.A,th:sol.th
   const pts=q.pts.map(p=>{const f=p[0]/xEnd;const X=P.X+(impact.X-P.X)*f,Y=P.Y+(impact.Y-P.Y)*f;const zTrue=P.H+(impact.H-P.H)*f,zVis=zs0+(ze0-zs0)*f;const v=w2s(X,Y,zVis);v.y+=(p[1]-zTrue)/10;return{v,t:p[2]};});
   const mesh=new THREE.Mesh(new THREE.SphereGeometry(kind==='adj'?2:1.4,10,8),new THREE.MeshBasicMaterial({color:kind==='adj'?0xffc35a:0xff9a4a}));mesh.visible=false;FX3.add(mesh);
   const tg=new THREE.BufferGeometry();tg.setAttribute('position',new THREE.BufferAttribute(new Float32Array(pts.length*3+3),3));const line=new THREE.Line(tg,new THREE.LineBasicMaterial({color:0xffb23e,transparent:true,opacity:kind==='adj'?.9:.55}));line.frustumCulled=false;FX3.add(line);
-  SHELLS.push({pts,tof:q.t,t:-delay,mesh,line,tg,impact,kind,onEnd,P});}
+  SHELLS.push({pts,tof:q.t,t:-delay,mesh,line,tg,impact,kind,onEnd,P,warn:kind==='adj'&&q.t>7});}
 function flash3(p,big){const m=new THREE.Mesh(new THREE.SphereGeometry(big?3:1.6,12,8),new THREE.MeshBasicMaterial({color:0xffa53a,transparent:true}));m.position.copy(p);m.userData={life:0,max:.5,grow:5,k:'f'};FX3.add(m);
   const s=new THREE.Mesh(new THREE.SphereGeometry(big?4:2.5,10,8),new THREE.MeshLambertMaterial({color:0x6e6a5c,transparent:true,opacity:.6}));s.position.copy(p);s.userData={life:0,max:big?6:4,grow:3,k:'s',rise:big?2:1.2};FX3.add(s);}
 function mark3(B,color,size,txt){const p=w2s(B.X,B.Y,hAt(B.X,B.Y)+2/T3.exag);const r=new THREE.Mesh(new THREE.RingGeometry(size*.6,size,20),new THREE.MeshBasicMaterial({color,side:THREE.DoubleSide,depthWrite:false}));r.rotation.x=-Math.PI/2;r.position.copy(p);IMP3.add(r);if(txt){const l=label3(txt,p.clone().add(new THREE.Vector3(0,9,0)),'#ffc35a');l.visible=T3.cam!=='obs';IMP3.add(l);}}
 let last3=performance.now();
 function loop3(now){requestAnimationFrame(loop3);const dt=Math.min(.1,(now-last3)/1000);last3=now;if(!T3.visible)return;const spd=+$('#s3Spd').value;
-  for(let i=SHELLS.length-1;i>=0;i--){const s=SHELLS[i];const was=s.t;s.t+=dt*spd;if(s.t<0)continue;if(was<0){flash3(s.pts[0].v.clone().add(new THREE.Vector3(0,1,0)),false);}
-    if(s.t>=s.tof){flash3(s.pts[s.pts.length-1].v,s.kind==='adj');FX3.remove(s.mesh);FX3.remove(s.line);s.mesh.geometry.dispose();s.tg.dispose();SHELLS.splice(i,1);s.onEnd&&s.onEnd();continue;}
+  for(let i=SHELLS.length-1;i>=0;i--){const s=SHELLS[i];const was=s.t;s.t+=dt*spd;if(s.t<0)continue;if(was<0){flash3(s.pts[0].v.clone().add(new THREE.Vector3(0,1,0)),false);boom3('shot',0,s.kind==='adj'?1:.7);}
+    if(s.warn&&!s.warned&&s.tof-s.t<=5){s.warned=true;log3('Batéria','Pozor, dopad!');}
+    if(s.t>=s.tof){flash3(s.pts[s.pts.length-1].v,s.kind==='adj');boom3('boom',T3.cam==='obs'?dist(OBS,s.impact)/340/spd:0,s.kind==='adj'?1:.8);FX3.remove(s.mesh);FX3.remove(s.line);s.mesh.geometry.dispose();s.tg.dispose();SHELLS.splice(i,1);s.onEnd&&s.onEnd();continue;}
     let k=0;while(k<s.pts.length-1&&s.pts[k+1].t<s.t)k++;const a=s.pts[k],b=s.pts[k+1]||a;const f=b.t>a.t?(s.t-a.t)/(b.t-a.t):0;const p=a.v.clone().lerp(b.v,f);s.mesh.visible=true;s.mesh.position.copy(p);
     const arr=s.tg.attributes.position.array;for(let j=0;j<=k;j++){arr[j*3]=s.pts[j].v.x;arr[j*3+1]=s.pts[j].v.y;arr[j*3+2]=s.pts[j].v.z;}arr[(k+1)*3]=p.x;arr[(k+1)*3+1]=p.y;arr[(k+1)*3+2]=p.z;s.tg.attributes.position.needsUpdate=true;s.tg.setDrawRange(0,k+2);
     if(T3.cam==='shell'&&i===0){const back=p.clone().sub(w2s(LAST.m.T.X,LAST.m.T.Y,LAST.m.T.H)).setY(0).normalize().multiplyScalar(60);CAM3.position.lerp(p.clone().add(back).add(new THREE.Vector3(0,20,0)),.2);CAM3.lookAt(p);}}
   for(let k=FX3.children.length-1;k>=0;k--){const o=FX3.children[k];const u=o.userData;if(!u||u.life==null)continue;u.life+=dt;const f=u.life/u.max;if(f>=1){FX3.remove(o);o.geometry.dispose();o.material.dispose();continue;}o.scale.setScalar(1+u.grow*Math.sqrt(f));o.material.opacity=(u.k==='f'?1:.6)*(1-f);if(u.rise)o.position.y+=u.rise*dt;}
-  if(T3.cam!=='shell'&&T3.cam!=='obs')CTL3.update();R3.render(SC3,CAM3);}
+  if(T3.cam==='map')return;if(T3.cam!=='shell'&&T3.cam!=='obs')CTL3.update();R3.render(SC3,CAM3);}
 
 /* --- training cycle --- */
-function log3(who,txt){SIM3.log.unshift({t:clk(Date.now()),who,txt});$('#s3Log').innerHTML=SIM3.log.map(l=>`<div><time>${l.t}</time><b>${l.who}:</b> ${esc(l.txt)}</div>`).join('');}
+function log3(who,txt){SIM3.log.unshift({t:clk(Date.now()),who,txt});if(T3.visible)say3(txt);$('#s3Log').innerHTML=SIM3.log.map(l=>`<div><time>${l.t}</time><b>${l.who}:</b> ${esc(l.txt)}</div>`).join('');}
 function steps3(n){$$('#steps3 div').forEach((d,i)=>{d.className=i+1<n?'done':(i+1===n?'on':'');});$('#h3Ph').textContent=['','Cieľ','Prvky','Zastrieľanie','Účinná paľba','Vyhodnotenie'][n]||'–';}
 function gunSel3(){const act=BAT.guns.map((g,i)=>({g,i,P:gunPos(i)})).filter(o=>o.g.on);const near=act.reduce((a,b)=>dist(a.P,BAT.SB)<=dist(b.P,BAT.SB)?a:b,act[0]);
   $('#s3Gun').innerHTML=act.map(o=>`<option value="${o.i}" ${o===near?'selected':''}>${o.i+1}. zbraň${o===near?' (základná)':''}</option>`).join('');}
-function newTask3(){SHELLS.forEach(s=>{FX3.remove(s.mesh);FX3.remove(s.line);});SHELLS=[];clear3(IMP3);SIM3.log=[];SIM3.shots=[];SIM3.adjDone=false;SIM3.effect=null;SIM3.busy=false;SIM3.lastC=null;
+function newTask3(){SHELLS.forEach(s=>{FX3.remove(s.mesh);FX3.remove(s.line);});SHELLS=[];clear3(IMP3);SIM3.log=[];SIM3.shots=[];SIM3.adjDone=false;SIM3.effect=null;SIM3.busy=false;SIM3.lastC=null;SIM3.corrs=[];SIM3.hints=0;SIM3.t0=0;SIM3.tAdj=0;SIM3.effImps=[];T3.oAz=0;T3.oEl=0;M3.s=null;M3.pts=[];if(window.speechSynthesis)speechSynthesis.cancel();
   if(!$('#s3Gun').options.length||!BAT.guns[+$('#s3Gun').value]?.on)gunSel3();SIM3.adjI=+$('#s3Gun').value;
   ENEMY3.forEach(e=>{});const k=+$('#s3Dif').value,D=dist(BAT.SB,LAST.m.T);SIM3.bias={dR:gauss()*.008*D*k,dL:gauss()*m2r(MILc()*8/6000)*k};
   const row=LAST.rows.find(r=>r.i===SIM3.adjI);SIM3.aimAdj={...(row&&row.aim?LAST.m.T:LAST.m.T)};
@@ -1554,36 +1586,30 @@ function solveAdj(){const P=gunPos(SIM3.adjI);return solveGun(P,SIM3.aimAdj,{sel
 function hud3(s){$('#h3S').textContent=s&&!s.err?fmtMil(s.azF,{az:true}):'–';$('#h3N').textContent=s&&!s.err?elTxt(s):'–';$('#h3R').textContent=SIM3.shots.length;}
 function disp3(D){return{r:gauss()*Math.max(10,.004*D)/.6745,l:gauss()*Math.max(3,.0012*D)/.6745};}
 function impactFrom(P,aim){const A=az(P,aim),D=dist(P,aim);const u={X:Math.cos(A),Y:Math.sin(A)},r={X:-Math.sin(A),Y:Math.cos(A)};const b=SIM3.bias,d=disp3(D);const along=b.dR+d.r,lat=D*Math.tan(b.dL)+d.l;return{X:aim.X+u.X*along+r.X*lat,Y:aim.Y+u.Y*along+r.Y*lat,H:aim.H};}
-$('#s3Fire').onclick=()=>{if(SIM3.busy||!LAST)return;const s=solveAdj();if(s.err){toast(s.err);return;}const P=gunPos(SIM3.adjI);aimModel(SIM3.adjI,s.azF,s.th);hud3(s);
+$('#s3Fire').onclick=()=>{if(SIM3.busy||!LAST)return;actx3();if(!SIM3.t0)SIM3.t0=Date.now();const s=solveAdj();if(s.err){toast(s.err);return;}const P=gunPos(SIM3.adjI);aimModel(SIM3.adjI,s.azF,s.th);hud3(s);
   const B=impactFrom(P,SIM3.aimAdj);SIM3.busy=true;$('#s3Fire').disabled=true;log3('Batéria',`Výstrel! Let ${fmtN(s.tof,1)} s.`);launch3(P,B,s,0,'adj',()=>onAdjImpact(B,s));};
-function onAdjImpact(B,s){const OB3=obs3();SIM3.busy=false;const T=LAST.m.T;const n=SIM3.shots.length+1;mark3(B,0xffc35a,2.6,String(n));
+function onAdjImpact(B,s){const OB3=ref3();SIM3.busy=false;const T=LAST.m.T;const n=SIM3.shots.length+1;mark3(B,0xffc35a,2.6,String(n));
   const lat=normS(az(OB3,B)-az(OB3,T)),u={X:Math.cos(az(OB3,T)),Y:Math.sin(az(OB3,T))};const rng=(B.X-T.X)*u.X+(B.Y-T.Y)*u.Y;const latR=m2r(Math.round(r2m(lat))),rngR=Math.round(rng/10)*10;
-  const miss=dist(B,T);const P=gunPos(SIM3.adjI);const c=computeCorr(P,OB3,T,latR,rngR);SIM3.lastC=c;SIM3.shots.push({n,latR,rngR,miss});hud3(s);
-  const txt=(Math.abs(r2m(latR))<.5?'Smer dobrý':`${latR<0?'Ľ':'P'} ${fmtMil(Math.abs(latR))}`)+', '+(rngR===0?'vzdialenosť dobrá':rngR>0?`ďalej ${rngR}`:`bližšie ${-rngR}`);
+  const miss=dist(B,T);const P=gunPos(SIM3.adjI);const c=computeCorr(P,OB3,T,latR,rngR);SIM3.lastC=c;
+  const txt=(Math.abs(r2m(latR))<.5?'Smer dobrý':`${latR<0?'Ľ':'P'} ${fmtMil(Math.abs(latR))}`)+', '+(rngR===0?'vzdialenosť dobrá':rngR>0?`ďalej ${rngR}`:`bližšie ${-rngR}`);SIM3.shots.push({n,latR,rngR,miss,B,txt,ref:pill('s3Ref')});hud3(s);map3Render();
   const tol=+$('#s3Tol').value||50;$('#s3Obs').style.display='';$('#s3ObsT').textContent=txt;$('#s3ObsT').classList.toggle('ok',miss<=tol);$('#s3Cmp').innerHTML='';$('#s3S').value='';$('#s3D').value='';
-  if(miss<=tol){log3('PZ',`${txt}. Zastrieľané, účinná paľba!`);SIM3.adjDone=true;$('#s3Me').style.display='none';$('#s3Eff').disabled=false;steps3(4);
+  if(miss<=tol){log3('PZ',`${txt}. Zastrieľané, účinná paľba!`);SIM3.adjDone=true;SIM3.tAdj=Date.now();$('#s3Me').style.display='none';$('#s3Eff').disabled=false;steps3(4);
     $('#s3Status').innerHTML=`<span class="okc">Zastrieľané po ${n}. rane</span> – výbuch ${fmtN(miss)} m od cieľa. Opravy sa prenesú na celú batériu.`;toast('Zastrieľané');return;}
-  log3('PZ',txt+'.');if(pill('s3Mode')==='auto'){applyAdj(c.dS,c.dD,P);$('#s3Me').style.display='none';$('#s3Cmp').innerHTML=corrLine3('Zavedená oprava',c.dS,c.dD);$('#s3Fire').disabled=false;}
+  log3('PZ',txt+'.');if(pill('s3Mode')==='auto'){SIM3.corrs.push({n,auto:true,c});applyAdj(c.dS,c.dD,P);$('#s3Me').style.display='none';$('#s3Cmp').innerHTML=corrLine3('Zavedená oprava',c.dS,c.dD);$('#s3Fire').disabled=false;}
   else{$('#s3Me').style.display='';$('#s3Fire').disabled=true;}
   $('#s3Status').innerHTML=`Rana ${n}: výbuch ${fmtN(miss)} m od cieľa. ${pill('s3Mode')==='auto'?'Oprava zavedená – môžeš páliť.':'Vypočítaj opravu z hlásenia a zadaj ju.'}`;}
 function corrLine3(t,dS,dD){return`<p class="small" style="margin:8px 0 0">${t}: smer <b>${fmtMil(dS,{signed:true})}</b>, vzdialenosť <b>${sgnM(dD)}</b></p>`;}
 function applyAdj(dS,dD,P){const A=az(P,SIM3.aimAdj),D=dist(P,SIM3.aimAdj);const u={X:Math.cos(A),Y:Math.sin(A)},r={X:-Math.sin(A),Y:Math.cos(A)};const lat=D*Math.tan(dS);
   SIM3.aimAdj={X:SIM3.aimAdj.X+u.X*dD+r.X*lat,Y:SIM3.aimAdj.Y+u.Y*dD+r.Y*lat,H:SIM3.aimAdj.H};log3('Batéria',`Oprava smeru ${fmtMil(dS,{signed:true})}, vzdialenosti ${sgnM(dD)}.`);const s=solveAdj();hud3(s);if(!s.err)aimModel(SIM3.adjI,s.azF,s.th);}
-$('#s3Go').onclick=()=>{const s=parseMil($('#s3S').value),d=parseFloat($('#s3D').value);if(isNaN(s)||isNaN(d))return toast('Zadaj obe opravy');const c=SIM3.lastC;
-  const eS=r2m(s-c.dS),eD=d-c.dD;const good=Math.abs(eS)<=3*MILc()/6000&&Math.abs(eD)<=Math.max(25,Math.abs(c.dD)*.1);
-  $('#s3Cmp').innerHTML=`<div class="cmp3"><span></span><span class="h">Tvoja</span><span class="h">Správne</span><span class="h">Smer</span><span>${fmtMil(s,{signed:true})}</span><span>${fmtMil(c.dS,{signed:true})}</span><span class="h">Vzdial.</span><span>${sgnM(d)}</span><span>${sgnM(c.dD)}</span></div>
-   <p class="small" style="margin:8px 0 0" class="${good?'okc':'warn'}"><span class="${good?'okc':'warn'}">${good?'Správne – oprava zavedená.':'Rozdiel oproti výpočtu – zavádza sa tvoja oprava, uvidíš výsledok.'}</span></p>`;
+$('#s3Go').onclick=()=>{const s=parseMil($('#s3S').value),d=parseFloat($('#s3D').value);if(isNaN(s)||isNaN(d))return toast('Zadaj obe opravy');const c=SIM3.lastC,sh=SIM3.shots[SIM3.shots.length-1];
+  const r=diag3(c,s,d,sh);SIM3.corrs.push({n:sh.n,s,d,c,r});
+  $('#s3Cmp').innerHTML=`<div class="cmp3"><span></span><span class="h">Tvoja</span><span class="h">Správne</span><span class="h">Smer</span><span>${fmtMil(s,{signed:true})}</span><span>${fmtMil(c.dS,{signed:true})}</span><span class="h">Vzdial.</span><span>${sgnM(d)}</span><span>${sgnM(c.dD)}</span></div>`+fb3HTML(r)+(r.ok?'':`<p class="small" style="margin:8px 0 2px"><b>Ako sa to malo počítať:</b></p>${hint3HTML(c)}<p class="small muted" style="margin:6px 0 0">Zavádza sa tvoja oprava – uvidíš, kam padne ďalšia rana.</p>`);
   applyAdj(s,d,gunPos(SIM3.adjI));$('#s3Me').style.display='none';$('#s3Fire').disabled=false;};
-$('#s3Hint').onclick=()=>{const c=SIM3.lastC;if(!c)return;const m=v=>fmtN(Math.abs(Math.round(v)));
-  $('#s3Cmp').innerHTML=corrLine3('Riešenie',c.dS,c.dD)+`<ol class="small muted" style="margin:6px 0 0;padding-left:18px">
-   <li>Pozorovateľ vidí výbuch zo svojho miesta (PZ – cieľ ${fmtN(c.Dp)} m): ${m(c.latM)} m ${c.latM<0?'vľavo':'vpravo'} (${fmtN(c.Dp)} m × odchýlka v dielcoch / 1000) a ${m(c.rngM)} m ${c.rngM<0?'bližšie':'ďalej'}.</li>
-   <li>Čiara zbraň – cieľ (${fmtN(c.Dg)} m) je voči čiare PZ – cieľ pootočená o uhol posunu ${fmtMil(c.Pu,{signed:true})}, preto sa hlásené „vľavo/bližšie“ nedajú preniesť priamo.</li>
-   <li>Po pootočení na čiaru zbrane treba výbuch posunúť o ${m(c.dD)} m ${c.dD>=0?'ďalej':'bližšie'} a ${m(c.dL)} m ${c.dL>=0?'doprava':'doľava'}.</li>
-   <li>Smer: ${m(c.dL)} m / ${fmtN(c.Dg)} m × 1000 ≈ ${fmtMil(c.dS,{signed:true})} (K = ${fmtN(c.K,2)}).</li></ol>`;};
-$$('#s3Mode button').forEach(b=>b.addEventListener('click',()=>{if(b.dataset.v==='auto'&&SIM3.lastC&&!SIM3.adjDone&&!SIM3.busy&&$('#s3Me').style.display!=='none'&&$('#s3Obs').style.display!=='none'){const c=SIM3.lastC;applyAdj(c.dS,c.dD,gunPos(SIM3.adjI));$('#s3Me').style.display='none';$('#s3Cmp').innerHTML=corrLine3('Zavedená oprava',c.dS,c.dD);$('#s3Fire').disabled=false;}}));
+$('#s3Hint').onclick=()=>{const c=SIM3.lastC;if(!c)return;SIM3.hints++;$('#s3Cmp').innerHTML=corrLine3('Riešenie',c.dS,c.dD)+hint3HTML(c);};
+$$('#s3Mode button').forEach(b=>b.addEventListener('click',()=>{if(b.dataset.v==='auto'&&SIM3.lastC&&!SIM3.adjDone&&!SIM3.busy&&$('#s3Me').style.display!=='none'&&$('#s3Obs').style.display!=='none'){const c=SIM3.lastC;SIM3.corrs.push({n:SIM3.shots.length,auto:true,c});applyAdj(c.dS,c.dD,gunPos(SIM3.adjI));$('#s3Me').style.display='none';$('#s3Cmp').innerHTML=corrLine3('Zavedená oprava',c.dS,c.dD);$('#s3Fire').disabled=false;}}));
 $('#s3New').onclick=()=>{if(!T3.ready)return;calcMission();if(!LAST)return;buildWorld3();gunSel3();newTask3();cam3(T3.cam==='free'?'over':T3.cam);};
 $('#s3Skip').onclick=()=>{if(!LAST||SIM3.busy)return;SIM3.adjDone=true;log3('Batéria','Účinná paľba bez zastrieľania (podľa úplnej prípravy).');$('#s3Eff').disabled=false;steps3(4);$('#s3Eff').click();};
-$('#s3Ex').onchange=$('#s3Ob').onchange=()=>{if(T3.ready&&LAST){buildWorld3();newTask3();cam3('over');}};
+$('#s3Ex').onchange=()=>{if(T3.ready&&LAST){buildWorld3();newTask3();cam3('over');}};
 $('#s3Eff').onclick=()=>{if(!LAST||SIM3.busy)return;const T=LAST.m.T;const sh={X:SIM3.aimAdj.X-T.X,Y:SIM3.aimAdj.Y-T.Y};const ok=LAST.rows.filter(r=>!r.skip&&!r.err);if(!ok.length)return;
   SIM3.busy=true;$('#s3Eff').disabled=true;$('#s3Fire').disabled=true;steps3(4);const sel={s:LAST.s,a:LAST.a,ci:LAST.ci};
   const plan=ok.map(r=>{const P=gunPos(r.i);const aim={X:r.aim.X+sh.X,Y:r.aim.Y+sh.Y,H:r.aim.H};const s=solveGun(P,aim,{sel,dv:r.g.dv,zt:LAST.zt});return{r,P,aim,s};}).filter(x=>!x.s.err);
@@ -1594,13 +1620,112 @@ $('#s3Eff').onclick=()=>{if(!LAST||SIM3.busy)return;const T=LAST.m.T;const sh={X
   $('#s3Status').innerHTML=`Účinná paľba – dopad o ${fmtN(maxT,1)} s.`;};
 function evalEffect(imps){SIM3.busy=false;steps3(5);const T=LAST.m.T,fu={X:Math.cos(LAST.Af),Y:Math.sin(LAST.Af)},du={X:-fu.Y,Y:fu.X};const F=LAST.m.F,Dp=LAST.m.Dp;
   const inside=B=>{const v={X:B.X-T.X,Y:B.Y-T.Y};if(F<1||Dp<1)return Math.hypot(v.X,v.Y)<=50;return Math.abs(v.X*fu.X+v.Y*fu.Y)<=F/2&&Math.abs(v.X*du.X+v.Y*du.Y)<=Dp/2;};
-  const n=imps.length,hit=imps.filter(inside).length;const kl=killEnemies(imps);const mpi={X:imps.reduce((a,b)=>a+b.X,0)/n,Y:imps.reduce((a,b)=>a+b.Y,0)/n};const Agt=az(BAT.SB,T);const v={X:mpi.X-T.X,Y:mpi.Y-T.Y};
+  SIM3.effImps=imps;const n=imps.length,hit=imps.filter(inside).length;const kl=killEnemies(imps);const mpi={X:imps.reduce((a,b)=>a+b.X,0)/n,Y:imps.reduce((a,b)=>a+b.Y,0)/n};const Agt=az(BAT.SB,T);const v={X:mpi.X-T.X,Y:mpi.Y-T.Y};
   const dR=v.X*Math.cos(Agt)+v.Y*Math.sin(Agt),dL=-v.X*Math.sin(Agt)+v.Y*Math.cos(Agt);const pct=Math.round(hit/n*100);
   log3('PZ',`Koniec paľby. V priestore cieľa ${hit} z ${n} rán (${pct} %), zasiahnuté ${kl.killed} z ${kl.total} objektov.`);
   $('#s3Res').innerHTML=`<div class="sum"><div class="hl"><div class="k">V priestore cieľa</div><div class="v">${pct}<small>%</small></div></div><div class="hl"><div class="k">Zasiahnuté objekty</div><div class="v">${kl.killed}<small>z ${kl.total}</small></div></div><div><div class="k">Stred dopadov – vzdialenosť</div><div class="v">${sgnM(dR,'')}<small>m</small></div></div><div><div class="k">Stred dopadov – smer</div><div class="v">${sgnM(dL,'')}<small>m</small></div></div></div><p class="small muted">Rán spolu ${n}. Objekt sa počíta ako zasiahnutý, ak dopad padol do ${fmtN(kl.R)} m (orientačný polomer účinku pre tento typ cieľa).</p>
    <p class="small muted">${SIM3.shots.length?'Zastrieľanie: '+SIM3.shots.length+' '+(SIM3.shots.length===1?'rana':SIM3.shots.length<5?'rany':'rán')+'.':'Bez zastrieľania.'} Kladná odchýlka stredu dopadov znamená ďalej / vpravo od cieľa.</p>`;
-  $('#s3Status').innerHTML='<span class="okc">Úloha splnená.</span> Nová úloha vygeneruje iné skutočné podmienky.';toast(`${pct} % rán v priestore cieľa`);}
+  $('#s3Res').insertAdjacentHTML('beforeend',evalAll({pct,kl,n}));map3Render();$('#s3Status').innerHTML='<span class="okc">Úloha splnená.</span> Nová úloha vygeneruje iné skutočné podmienky.';toast(`${pct} % rán v priestore cieľa`);}
 function gauss(){let u=0,v=0;while(!u)u=Math.random();while(!v)v=Math.random();return Math.sqrt(-2*Math.log(u))*Math.cos(TAU*v);}
+
+/* --- 3D: ďalekohľad PZ (pohyblivý), mapa s meraním, zvuky a hlásenia, vyhodnotenie opráv --- */
+T3.oAz=0;T3.oEl=0;
+function obsLook(){const OB3=obs3(),T=LAST.m.T;const D=Math.max(1,dist(OB3,T)),A=az(OB3,T)+T3.oAz,E=Math.atan2(T.H-(OB3.H+2),D)+T3.oEl;
+  CAM3.lookAt(w2s(OB3.X+D*Math.cos(A),OB3.Y+D*Math.sin(A),OB3.H+2+D*Math.tan(E)));}
+function binoMove(dA,dE){if(T3.cam!=='obs'||!LAST)return;T3.oAz=normS(T3.oAz+dA);T3.oEl=Math.max(-.25,Math.min(.25,T3.oEl+dE));obsLook();reticle();}
+$$('#bino3 button').forEach(b=>b.onclick=()=>{const st=m2r(MILc()*5/6000);({l:()=>binoMove(-st,0),r:()=>binoMove(st,0),u:()=>binoMove(0,st),d:()=>binoMove(0,-st),c:()=>{T3.oAz=0;T3.oEl=0;binoMove(0,0);}})[b.dataset.b]();});
+(()=>{let drag=null;const st=$('#stage3');
+  st.addEventListener('pointerdown',e=>{if(T3.cam!=='obs'||e.target.closest('button,#map3'))return;drag={x:e.clientX,y:e.clientY};st.setPointerCapture(e.pointerId);});
+  st.addEventListener('pointermove',e=>{if(!drag)return;const W=st.clientWidth||1,k=OBS_HFOV/W;binoMove(-(e.clientX-drag.x)*k,(e.clientY-drag.y)*k);drag={x:e.clientX,y:e.clientY};});
+  st.addEventListener('pointerup',()=>drag=null);st.addEventListener('pointercancel',()=>drag=null);
+  document.addEventListener('keydown',e=>{if(CUR!=='t3d'||T3.cam!=='obs'||/INPUT|SELECT|TEXTAREA/.test(document.activeElement?.tagName||''))return;const st=m2r(MILc()*(e.shiftKey?50:5)/6000);
+    const f={ArrowLeft:()=>binoMove(-st,0),ArrowRight:()=>binoMove(st,0),ArrowUp:()=>binoMove(0,st),ArrowDown:()=>binoMove(0,-st)}[e.key];if(f){e.preventDefault();f();}});})();
+
+/* zvuky (syntetizované) a hlásenia hlasom */
+const SND3={on:CFG.s3Snd!==false,voice:CFG.s3Voice!==false,ctx:null,last:0};
+function snd3UI(){$('#s3Snd').checked=SND3.on;$('#s3Voice').checked=SND3.voice;$('#snd3').classList.toggle('off',!SND3.on&&!SND3.voice);}
+$('#s3Snd').onchange=()=>{SND3.on=$('#s3Snd').checked;CFG.s3Snd=SND3.on;saveCfg();snd3UI();};
+$('#s3Voice').onchange=()=>{SND3.voice=$('#s3Voice').checked;CFG.s3Voice=SND3.voice;saveCfg();snd3UI();if(!SND3.voice&&window.speechSynthesis)speechSynthesis.cancel();};
+$('#snd3').onclick=()=>{const on=!(SND3.on||SND3.voice);SND3.on=SND3.voice=on;CFG.s3Snd=CFG.s3Voice=on;saveCfg();snd3UI();if(on)actx3();else if(window.speechSynthesis)speechSynthesis.cancel();};
+snd3UI();
+function actx3(){try{if(!SND3.ctx){const A=window.AudioContext||window.webkitAudioContext;if(!A)return null;SND3.ctx=new A();}if(SND3.ctx.state==='suspended')SND3.ctx.resume();return SND3.ctx;}catch(e){return null;}}
+function boom3(kind,delay=0,vol=1){if(!SND3.on)return;const c=actx3();if(!c)return;const t0=c.currentTime+Math.max(0,delay);if(Math.abs(t0-SND3.last)<.07)return;SND3.last=t0;
+  const shot=kind==='shot',dur=shot?.8:1.9,n=Math.floor(c.sampleRate*dur),b=c.createBuffer(1,n,c.sampleRate),d=b.getChannelData(0);
+  for(let i=0;i<n;i++){const t=i/c.sampleRate;d[i]=(Math.random()*2-1)*Math.exp(-t*(shot?7:2.8))*(t<.004?t/.004:1);}
+  const src=c.createBufferSource();src.buffer=b;const f=c.createBiquadFilter();f.type='lowpass';f.frequency.value=shot?1100:380;const g=c.createGain();g.gain.value=Math.min(1,.85*vol);src.connect(f);f.connect(g);g.connect(c.destination);src.start(t0);
+  const o=c.createOscillator(),og=c.createGain();o.type='sine';o.frequency.setValueAtTime(shot?120:62,t0);o.frequency.exponentialRampToValueAtTime(28,t0+.6);og.gain.setValueAtTime(Math.min(1,.9*vol),t0);og.gain.exponentialRampToValueAtTime(.001,t0+.7);o.connect(og);og.connect(c.destination);o.start(t0);o.stop(t0+.75);}
+function speakTxt(t){return t.replace(/\bĽ\b/g,'vľavo').replace(/\bP\b/g,'vpravo').replace(/−/g,'mínus ').replace(/(\d+)-(\d\d)\b/g,(m,a,b)=>`${a} ${b}`).replace(/\bm\b/g,'metrov').replace(/\bE\b/g,'východ').replace(/\bN\b/g,'sever');}
+function say3(t){if(!SND3.voice||!window.speechSynthesis)return;try{const u=new SpeechSynthesisUtterance(speakTxt(t));u.lang='sk-SK';u.rate=1.08;const v=speechSynthesis.getVoices().find(v=>/^sk/i.test(v.lang))||speechSynthesis.getVoices().find(v=>/^cs/i.test(v.lang));if(v)u.voice=v;speechSynthesis.speak(u);}catch(e){}}
+
+/* vyhodnotenie opráv */
+function onLine3(c){return Math.abs(r2m(c.Pu))<MILc()*.05&&Math.abs(c.K-1)<.15;}
+function hint3HTML(c){const m=v=>fmtN(Math.abs(Math.round(v)));
+  if(onLine3(c))return`<ol class="small muted" style="margin:6px 0 0;padding-left:18px"><li>Pozorovateľ je prakticky na čiare streľby (K = ${fmtN(c.K,2)}, uhol posunu ${fmtMil(c.Pu,{signed:true})}).</li><li>Oprava = opačná hodnota hlásenia: výbuch ${m(c.latM)} m ${c.latM<0?'vľavo':'vpravo'} a ${m(c.rngM)} m ${c.rngM<0?'bližšie':'ďalej'} → oprava ${fmtMil(c.dS,{signed:true})} a ${sgnM(c.dD)}.</li></ol>`;
+  return`<ol class="small muted" style="margin:6px 0 0;padding-left:18px">
+   <li>Pozorovateľ vidí výbuch zo svojho miesta (PZ – cieľ ${fmtN(c.Dp)} m): ${m(c.latM)} m ${c.latM<0?'vľavo':'vpravo'} (${fmtN(c.Dp)} m × odchýlka v dielcoch / 1000) a ${m(c.rngM)} m ${c.rngM<0?'bližšie':'ďalej'}.</li>
+   <li>Čiara zbraň – cieľ (${fmtN(c.Dg)} m) je voči čiare PZ – cieľ pootočená o uhol posunu ${fmtMil(c.Pu,{signed:true})}${Math.abs(r2m(c.Pu))<MILc()*.05?' – je malý, platí približne: oprava smeru ≈ −odchýlka × K, vzdialenosť opačne':', preto sa hlásené „vľavo/bližšie“ nedajú preniesť priamo'}.</li>
+   <li>Po pootočení na čiaru zbrane treba výbuch posunúť o ${m(c.dD)} m ${c.dD>=0?'ďalej':'bližšie'} a ${m(c.dL)} m ${c.dL>=0?'doprava':'doľava'}.</li>
+   <li>Smer: ${m(c.dL)} m / ${fmtN(c.Dg)} m × 1000 ≈ ${fmtMil(c.dS,{signed:true})} (K = ${fmtN(c.K,2)}).</li></ol>`;}
+function diag3(c,s,d,sh){const N=[],tolS=3*MILc()/6000,tolD=Math.max(25,Math.abs(c.dD)*.1),eS=r2m(s-c.dS),eD=d-c.dD,okS=Math.abs(eS)<=tolS,okD=Math.abs(eD)<=tolD;
+  const lat=sh.latR,rng=sh.rngR,line=onLine3(c),bigPu=Math.abs(r2m(c.Pu))>=MILc()*.05;
+  if(!okS){if(Math.abs(r2m(lat))>=2&&Math.sign(s)===Math.sign(lat)&&Math.sign(c.dS)!==Math.sign(lat))N.push(`Smer – zlé znamienko: hlásenie ${lat<0?'Ľ':'P'} hovorí, kde výbuch <b>je</b>. Oprava ide na opačnú stranu (${lat<0?'doprava, +':'doľava, −'}).`);
+    else if(!line&&Math.abs(r2m(s+lat))<=tolS)N.push(`Smer – hlásenú odchýlku si preniesol priamo (${fmtMil(-lat,{signed:true})}). PZ nie je na čiare streľby (K = ${fmtN(c.K,2)}, uhol posunu ${fmtMil(c.Pu,{signed:true})}), odchýlku treba prepočítať.`);
+    else if(bigPu&&Math.abs(r2m(s+lat*c.K))<=tolS)N.push(`Smer – použil si K (−odchýlka × K = ${fmtMil(-lat*c.K,{signed:true})}), ale pri uhle posunu ${fmtMil(c.Pu,{signed:true})} približné pravidlo neplatí – treba pootočiť na čiaru zbrane.`);
+    else N.push(`Smer – odchýlka ${fmtMil(m2r(Math.abs(eS)))} ${eS>0?'doprava':'doľava'} od správnej opravy ${fmtMil(c.dS,{signed:true})} (na cieli ≈ ${fmtN(Math.abs(c.Dg*Math.tan(s-c.dS)))} m).`);}
+  if(!okD){if(rng&&Math.sign(d)===Math.sign(rng)&&Math.sign(c.dD)!==Math.sign(rng))N.push(`Vzdialenosť – zlé znamienko: „${rng>0?'ďalej':'bližšie'}“ znamená, že výbuch je ${rng>0?'za cieľom':'pred cieľom'}, opravuje sa ${rng>0?'BLIŽŠIE (−)':'ĎALEJ (+)'}.`);
+    else if(bigPu&&Math.abs(d+rng)<=tolD)N.push(`Vzdialenosť – hlásenú hodnotu si preniesol priamo. Pri uhle posunu ${fmtMil(c.Pu,{signed:true})} sa bočná odchýlka ${fmtN(Math.abs(Math.round(c.latM)))} m čiastočne premieta do vzdialenosti – správne ${sgnM(c.dD)}.`);
+    else N.push(`Vzdialenosť – rozdiel ${sgnM(eD)} oproti správnej oprave ${sgnM(c.dD)}.`);}
+  return{okS,okD,ok:okS&&okD,eS,eD,notes:N};}
+function fb3HTML(r){return`<div class="fb3 ${r.ok?'ok':'bad'}"><b>${r.ok?'Oprava správna':'Oprava s chybou'}</b>${r.notes.length?'<ul>'+r.notes.map(n=>'<li>'+n+'</li>').join('')+'</ul>':''}</div>`;}
+function evalAll(eff){const sh=SIM3.shots,C=SIM3.corrs,me=C.filter(x=>!x.auto),good=me.filter(x=>x.r.ok).length,nAdj=sh.length;
+  let sc=100;sc-=Math.max(0,nAdj-3)*8;sc-=(me.length-good)*12;sc-=SIM3.hints*5;if(eff)sc-=Math.max(0,60-eff.pct)*.5;if(!SIM3.adjDone)sc-=10;sc=Math.max(0,Math.round(sc));
+  const gr=sc>=85?'Výborne':sc>=70?'Chválitebne':sc>=50?'Dobre':'Nevyhovel';const tt=SIM3.t0?Math.round((SIM3.tAdj||Date.now())-SIM3.t0)/1000:0;
+  const tips=[...new Set(me.flatMap(x=>x.r.notes))];
+  const rows=sh.map((x,i)=>{const k=C.find(c=>c.n===x.n);return`<tr><td>${x.n}</td><td>${x.txt}</td><td>${fmtN(x.miss)} m</td><td>${k?(k.auto?'auto':`${fmtMil(k.s,{signed:true})}, ${sgnM(k.d)}`):'–'}</td><td>${k?`${fmtMil(k.c.dS,{signed:true})}, ${sgnM(k.c.dD)}`:'–'}</td><td>${k?(k.auto?'–':k.r.ok?'<span class="okc">✓</span>':'<span class="warn">✗</span>'):'zastrieľané'}</td></tr>`;}).join('');
+  return`<div class="card" style="margin-top:10px"><h3 style="margin-top:0">Vyhodnotenie streľby – ${gr} (${sc} b.)</h3>
+   <div class="sum"><div><div class="k">Rany pri zastrieľaní</div><div class="v">${nAdj}</div></div><div><div class="k">Správne opravy</div><div class="v">${me.length?good+'<small>z '+me.length+'</small>':'–'}</div></div><div><div class="k">Čas zastrieľania</div><div class="v">${fmtN(tt,0)}<small>s</small></div></div><div><div class="k">Účinná paľba</div><div class="v">${eff?eff.pct+'<small>% v cieli</small>':'–'}</div></div></div>
+   <div class="scroll-x"><table class="ev3"><tr><th>Rana</th><th>Hlásenie</th><th>Od cieľa</th><th>Tvoja oprava</th><th>Správna</th><th></th></tr>${rows}</table></div>
+   ${tips.length?`<p class="small" style="margin:10px 0 4px"><b>Na čo si dať pozor:</b></p><ul class="small" style="margin:0;padding-left:18px">${tips.map(t=>'<li>'+t+'</li>').join('')}</ul>`:(me.length?'<p class="small okc" style="margin:10px 0 0">Všetky opravy boli správne.</p>':'')}
+   <p class="small muted" style="margin:8px 0 0">Body: −8 za každú ranu pri zastrieľaní nad 3, −12 za chybnú opravu, −5 za použitie „Ukázať riešenie“${eff?', zníženie pri menej ako 60 % rán v cieli':''}.${SIM3.hints?` Riešenie si zobrazil ${SIM3.hints}×.`:''}</p></div>`;}
+
+/* mapa palebnej úlohy s meraním */
+const M3={s:null,cx:0,cy:0,pts:[],drag:null};
+function map3Objs(){const o=[{p:BAT.SB,n:'SB'},{p:obs3(),n:'PZ'},{p:LAST.m.T,n:'Cieľ '+LAST.m.id}];BAT.guns.forEach((g,i)=>{if(g.on)o.push({p:gunPos(i),n:(i+1)+'. zbraň'});});SIM3.shots.forEach(x=>o.push({p:x.B,n:x.n+'. rana'}));if(SIM3.aimAdj)o.push({p:SIM3.aimAdj,n:'zamerané'});return o;}
+function map3Fit(){const st=$('#stage3'),W=st.clientWidth||400,H=st.clientHeight||300;const P=map3Objs().map(o=>o.p);const xs=P.map(p=>p.X),ys=P.map(p=>p.Y);
+  M3.cx=(Math.min(...xs)+Math.max(...xs))/2;M3.cy=(Math.min(...ys)+Math.max(...ys))/2;M3.s=Math.max((Math.max(...ys)-Math.min(...ys)+200)/Math.max(100,W-60),(Math.max(...xs)-Math.min(...xs)+200)/Math.max(100,H-130),.5);}
+function map3Show(){if(!LAST)return;if(M3.s==null)map3Fit();map3Render();}
+function map3Render(){if(T3.cam!=='map'||!LAST)return;const st=$('#stage3'),W=st.clientWidth,H=st.clientHeight,s=M3.s;const sx=p=>(p.Y-M3.cy)/s+W/2,sy=p=>-(p.X-M3.cx)/s+H/2;
+  const step=[50,100,200,500,1000,2000,5000,10000].find(v=>v/s>=70)||10000;let g='';const X0=M3.cx-H/2*s,X1=M3.cx+H/2*s,Y0=M3.cy-W/2*s,Y1=M3.cy+W/2*s;
+  for(let Y=Math.ceil(Y0/step)*step;Y<=Y1;Y+=step){const x=sx({Y});g+=`<line x1="${x}" y1="0" x2="${x}" y2="${H}" stroke="var(--line)"/><text x="${x+3}" y="${H-6}" fill="var(--muted)" style="fill:var(--muted)">${fmtN(Y/1000,step<1000?1:0)}</text>`;}
+  for(let X=Math.ceil(X0/step)*step;X<=X1;X+=step){const y=sy({X});g+=`<line x1="0" y1="${y}" x2="${W}" y2="${y}" stroke="var(--line)"/><text x="4" y="${y-3}" style="fill:var(--muted)">${fmtN(X/1000,step<1000?1:0)}</text>`;}
+  const T=LAST.m.T,OB=obs3(),SB=BAT.SB,ln=(a,b,c,da)=>`<line x1="${sx(a)}" y1="${sy(a)}" x2="${sx(b)}" y2="${sy(b)}" stroke="${c}" stroke-width="1.6" ${da?'stroke-dasharray="6 5"':''}/>`;
+  g+=ln(SB,T,'var(--acc)',1)+ln(OB,T,'var(--fr)',1);
+  const fu={X:Math.cos(LAST.Af),Y:Math.sin(LAST.Af)},du={X:-fu.Y,Y:fu.X},F=Math.max(LAST.m.F,10)/2,Dp=Math.max(LAST.m.Dp,10)/2;
+  g+=`<polygon points="${[[-1,-1],[1,-1],[1,1],[-1,1]].map(([i,j])=>{const p={X:T.X+fu.X*i*F+du.X*j*Dp,Y:T.Y+fu.Y*i*F+du.Y*j*Dp};return sx(p)+','+sy(p);}).join(' ')}" fill="color-mix(in srgb,var(--ho) 15%,transparent)" stroke="var(--ho)" stroke-width="1.5"/>`;
+  BAT.guns.forEach((q,i)=>{if(!q.on)return;const p=gunPos(i);g+=`<rect x="${sx(p)-4}" y="${sy(p)-4}" width="8" height="8" fill="var(--fr)"/>`;if(s<6)g+=`<text x="${sx(p)+6}" y="${sy(p)+4}">${i+1}</text>`;});
+  g+=natoFr(sx(SB),sy(SB)-16,9,'var(--fr)')+`<text x="${sx(SB)+12}" y="${sy(SB)-12}">SB</text>`;
+  g+=`<circle cx="${sx(OB)}" cy="${sy(OB)}" r="6" fill="none" stroke="var(--fr)" stroke-width="2.2"/><circle cx="${sx(OB)}" cy="${sy(OB)}" r="1.8" fill="var(--fr)"/><text x="${sx(OB)+9}" y="${sy(OB)-8}">PZ</text>`;
+  g+=natoHo(sx(T),sy(T),8,'var(--ho)')+`<text x="${sx(T)+11}" y="${sy(T)-9}">Cieľ ${esc(LAST.m.id)}</text>`;
+  (SIM3.effImps||[]).forEach(B=>g+=`<circle cx="${sx(B)}" cy="${sy(B)}" r="2.2" fill="#ff7a3a"/>`);
+  if(SIM3.aimAdj&&!SIM3.adjDone){const a=SIM3.aimAdj;g+=`<path d="M${sx(a)-7} ${sy(a)}h14M${sx(a)} ${sy(a)-7}v14" stroke="var(--acc)" stroke-width="2"/>`;}
+  SIM3.shots.forEach(x=>{const B=x.B;g+=`<circle cx="${sx(B)}" cy="${sy(B)}" r="7" fill="#ffc35a" fill-opacity=".25" stroke="#ffc35a" stroke-width="2"/><text x="${sx(B)}" y="${sy(B)+4}" text-anchor="middle" style="font-weight:700">${x.n}</text>`;});
+  M3.pts.forEach((p,i)=>{g+=`<circle cx="${sx(p.p)}" cy="${sy(p.p)}" r="5" fill="var(--acc)"/>`;});if(M3.pts.length===2)g+=ln(M3.pts[0].p,M3.pts[1].p,'var(--acc)');
+  const bar=step;g+=`<line x1="12" y1="${H-26}" x2="${12+bar/s}" y2="${H-26}" stroke="var(--text)" stroke-width="2"/><text x="12" y="${H-32}">${bar>=1000?fmtN(bar/1000)+' km':bar+' m'}</text>`;
+  $('#map3').setAttribute('viewBox',`0 0 ${W} ${H}`);$('#map3').innerHTML=g;map3Info();}
+function map3Info(){const P=M3.pts,f=p=>`E ${fmtN(Math.round(p.p.Y))}, N ${fmtN(Math.round(p.p.X))}${p.n?' ('+esc(p.n)+')':''}`;let h;
+  if(!P.length)h='Meranie: ťukni na 2 body (prichytia sa k objektom).';
+  else if(P.length===1)h=`<b>Bod 1:</b> ${f(P[0])}<br>Ťukni na druhý bod.`;
+  else{const a=P[0].p,b=P[1].p,dh=T3.rbf?hAt(b.X,b.Y)-hAt(a.X,a.Y):null;h=`<b>${fmtN(dist(a,b))} m</b>, smerník <b>${fmtMil(az(a,b),{az:true})}</b>${dh!=null?`, prevýšenie terénu ${sgnM(dh)}`:''}<br><span class="muted">${f(P[0])} → ${f(P[1])}</span>`;}
+  $('#mapInfo3').innerHTML=h;}
+(()=>{const sv=$('#map3');const toW=e=>{const r=sv.getBoundingClientRect(),W=r.width,H=r.height;return{X:M3.cx-((e.clientY-r.top)-H/2)*M3.s,Y:M3.cy+((e.clientX-r.left)-W/2)*M3.s};};
+  sv.addEventListener('pointerdown',e=>{M3.drag={x:e.clientX,y:e.clientY,moved:false};sv.setPointerCapture(e.pointerId);});
+  sv.addEventListener('pointermove',e=>{const d=M3.drag;if(!d)return;const dx=e.clientX-d.x,dy=e.clientY-d.y;if(!d.moved&&Math.hypot(dx,dy)<5)return;d.moved=true;M3.cy-=dx*M3.s;M3.cx+=dy*M3.s;d.x=e.clientX;d.y=e.clientY;map3Render();});
+  sv.addEventListener('pointerup',e=>{const d=M3.drag;M3.drag=null;if(!d||d.moved)return;let p=toW(e),n='';const snap=map3Objs().reduce((a,o)=>{const k=dist(o.p,p)/M3.s;return k<14&&(!a||k<a.k)?{o,k}:a;},null);if(snap){p={X:snap.o.p.X,Y:snap.o.p.Y};n=snap.o.n;}
+    if(M3.pts.length>=2)M3.pts=[];M3.pts.push({p,n});map3Render();});
+  sv.addEventListener('wheel',e=>{e.preventDefault();const p=toW(e),k=e.deltaY>0?1.2:1/1.2;M3.cx=p.X+(M3.cx-p.X)*k;M3.cy=p.Y+(M3.cy-p.Y)*k;M3.s*=k;map3Render();},{passive:false});
+  $$('[data-m3]').forEach(b=>b.onclick=()=>{const a=b.dataset.m3;if(a==='in')M3.s/=1.5;else if(a==='out')M3.s*=1.5;else if(a==='fit')map3Fit();else M3.pts=[];map3Render();});})();
+
+setPill('s3Ref',CFG.s3Ref==='gun'?'gun':'pz');$$('#s3Ref button').forEach(b=>b.addEventListener('click',()=>{CFG.s3Ref=b.dataset.v;saveCfg();toast(b.dataset.v==='gun'?'Ďalšie hlásenia k čiare zbraň – cieľ: oprava = opak hlásenia':'Ďalšie hlásenia z PZ: oprava cez K a uhol posunu');}));
 
 /* ================= EDITORY (munícia, zapaľovače, typy cieľov) ================= */
 let ED_AM=null;
